@@ -1,0 +1,29 @@
+.panel-texture {
+    overflow: hidden;
+
+    display: grid;
+    place-items: center;
+
+    &_matcaps {
+        @include Inner-Wrapper;
+        width: 100%;
+        height: 100%;
+
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        grid-column-gap: 0.4vw;
+        grid-row-gap: 0.4vw;
+
+        &-matcap {
+            cursor: pointer;
+            height: 1.75vw;
+            width: 1.75vw;
+            border-radius: 50%;
+            // filter: drop-shadow(3px 3px 1px #000000); /// Massive Improvement of Performance if you remove shadow styling
+
+            &:hover{
+                transform: translateY(-2px);
+            }
+        }
+    }
+}

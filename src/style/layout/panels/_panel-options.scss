@@ -1,0 +1,48 @@
+.panel-options{
+    overflow: hidden;
+
+    &_general{
+        @include Inner-Wrapper;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        &-rename{
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-evenly;
+
+            margin-bottom: 0.4vw;
+
+            label{
+                font-size: 0.8vw;
+                font-weight: bold;
+                margin-right: 0.4vw;
+            }
+
+            input{
+                width: 80%;
+                height: 1vw;
+                border-radius: 0.4vw;
+                border: none;
+
+                background-color: var(--primary);
+                color: var(--secondary);
+                padding-inline: 0.4vw;
+            }
+
+        }
+
+        &-delete{
+            width: 80%;
+            border-radius: 0.4vw;
+            border: none;
+            height: 1vw;
+            font-size: 0.8vw;
+            background-color: var(--danger-action);
+            color: var(--secondary);
+        }
+    }
+}

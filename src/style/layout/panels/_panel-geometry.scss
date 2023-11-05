@@ -1,0 +1,151 @@
+.panel-geometry {
+  overflow: hidden;
+
+  &_generator {
+    @include Inner-Wrapper;
+
+    height: 20%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    margin-bottom: 0.5rem;
+
+    &-selectors {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+
+      select {
+        @include ddw-normal;
+      }
+    }
+
+    &-action {
+      display: grid;
+      place-items: center;
+      height: 50%;
+
+      button {
+        @include button;
+
+        width: 80%;
+        height: 1.5vw;
+
+        background-color: var(--accent);
+        color: var(--secondary);
+      }
+    }
+
+  }
+
+
+
+  &_shapes {
+    @include Inner-Wrapper;
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    
+    &-container {
+
+      @include Inner-Wrapper;
+      overflow: visible;
+      width: 100%;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    overflow: scroll;
+
+    &::-webkit-scrollbar {
+      display: none
+    }
+
+    &-button {
+      @include button;
+      color: var(--secondary);
+      margin-bottom: 0.5rem;
+
+      width: 100%;
+      min-height: 1.5vw;
+      height: 1.5vw;
+    }
+
+    &-panel {
+      @include Inner-Wrapper;
+      background-color: var(--primary);
+      color: var(--secondary);
+
+      width: 80%;
+      height: 100%;
+
+      margin-bottom: 0.5rem;
+
+      &-dropdown {
+        @include button;
+
+        background-color: var(--primary);
+        color: var(--secondary);
+
+        text-align: left;
+        font-weight: 700;
+
+        width: 80%;
+        margin-bottom: 0.5rem;
+      }
+
+      &-sliders {
+        display: grid;
+        place-items: center;
+
+        &-container {
+          width: 80%;
+        }
+
+        &-slider {
+          display: flex;
+          flex-direction: row;
+          align-items:center;
+          justify-content: flex-start;
+
+          margin-bottom: 0.5rem;
+
+          label {
+            font-size: 0.8vw;
+            margin-right: 1rem;
+          }
+
+          .input_slider {
+            margin-right: 0.5rem;
+            width: 5.5vw;
+            accent-color: var(--accent);
+          }
+
+          input {
+            width: 1.2vw;
+            font-size: 0.6vw;
+            background: transparent;
+            border: none;
+            color: var(--secondary);
+          }
+
+          .slider {
+            display: flex;
+            flex-direction: row;
+          }
+        }
+      }
+    }
+  }
+}

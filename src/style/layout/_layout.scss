@@ -1,0 +1,65 @@
+.editor {
+  @include Panel;
+  height: 100%;
+  width: 100%;
+  background-color: var(--primary);
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  
+}
+
+.row{
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  &:nth-child(1){
+    height: 5vh;
+  }
+  &:nth-child(2){
+    height: 70vh;
+  }
+  &:nth-child(3){
+    height: 20vh;
+  }
+}
+
+.panel{
+  @include Panel;
+
+  &-top{
+    width: 100%;
+    height: 100%;
+  }
+
+  &-material{
+    width: 20%;
+    height: 100%;
+  }
+  
+  &-canvas{
+    width: 80%;
+    height: 100%;
+  }
+  
+  &-geometry{
+    width: 20%;
+    height: 100%;
+  }
+
+  &-camera, 
+  &-options,
+  &-renderer,
+  &-texture,
+  &-usual{
+    width: 14%;
+    height: 100%;
+  }
+
+  &-export{
+  width: 30%;
+  height: 100%;
+  }
+}

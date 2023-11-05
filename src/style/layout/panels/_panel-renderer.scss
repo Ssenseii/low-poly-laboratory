@@ -1,0 +1,19 @@
+.panel-renderer{
+    overflow: hidden;
+
+    &_info{
+        @include Inner-Wrapper;
+        color: var(--primary);
+        height: 100%;
+        
+        h2{
+            font-size: 0.8vw;
+            margin-bottom: 0.2vw;
+        }
+
+        p{
+            font-size: 0.6vw;
+            text-indent: 0.8vw;
+        }
+    }
+}

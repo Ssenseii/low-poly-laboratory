@@ -1,0 +1,48 @@
+@mixin Center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@mixin Panel {
+    border: 1px solid var(--secondary);
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 8;
+}
+
+@mixin Inner-Wrapper {
+    border-radius: 8px;
+    background-color: var(--secondary);
+    padding: 0.4vw;
+    overflow: scroll;
+    
+        &::-webkit-scrollbar {
+            display: none
+        }
+}
+
+@mixin ddw-normal {
+    width: 50%;
+    height: 1.25vw;
+    border-radius: 8px;
+    background-color: var(--primary);
+    color: var(--secondary);
+    font-size: 0.7vw;
+    padding-inline: 0.4vw;
+    outline: none;
+}
+
+@mixin button {
+    
+    padding-inline: 0.4vw;
+
+    border: none;
+    border-radius: 0.4vw;
+
+
+    font-size: 0.7vw;
+    text-align: center;
+    outline: none;
+}
