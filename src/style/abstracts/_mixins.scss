@@ -16,10 +16,13 @@
     border-radius: 8px;
     background-color: var(--secondary);
     padding: 0.4vw;
+    // margin-bottom: 0.4vw;
     overflow: scroll;
     
         &::-webkit-scrollbar {
             display: none
+
+        
         }
 }
 

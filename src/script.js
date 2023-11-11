@@ -1,57 +1,157 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader'
 import "@melloware/coloris/dist/coloris.css";
 import Coloris from "@melloware/coloris";
 
 
+
+/**
+ *  Loaders
+*/
+
+const textureLoader = new THREE.TextureLoader();
+const hdriLoader = new RGBELoader();
+
+
 /**
  * Base
- */
+*/
 
 
 // Canvas
 const canvas_wrapper = document.querySelector('div.panel-canvas')
 const canvas = document.querySelector('canvas.webgl')
+let scene = new THREE.Scene();
 
 // Scene
-const scene = new THREE.Scene()
+// const scene = new THREE.Scene()
 
 /**
  * Textures
  */
-const textureLoader = new THREE.TextureLoader();
+
 
 const matcaps_panel = document.getElementById("matcaps-panel");
+const normals_panel = document.getElementById("normals-panel");
+const hdris_panel = document.getElementById("hdris-panel")
 
-// Create a MatCap material array outside of the loop
+// Create a texture material array outside of the loop
 const Loaded_Matcaps = [];
+const Loaded_Normals = [];
+const Loaded_Hdris = [];
 
-for (let i = 0; i <= 642; i++) {
-    // Create a MatCap element
-    const matcap = document.createElement("div");
-    matcap.id = `matcap-${i}`;
-    matcap.classList.add("panel-texture_matcaps-matcap");
-    matcap.style.background = `url("textures/matcaps/${i}.png")`;
-    matcap.style.backgroundSize = "cover";
-    matcaps_panel.appendChild(matcap);
+function Create_Texture_Button(type, index){
+    const texture = document.createElement("div");
+    texture.id = `${type}-${index}`;
+    texture.classList.add(`panel-texture_${type}s-${type}`);
+    texture.style.background = `url("textures/${type}s/${index}.png")`;
+    texture.style.backgroundSize = "cover";
+    return texture;
+}
 
-    // Load the MatCap texture and add it to the array
-    const Loaded_Matcap = textureLoader.load(`./textures/matcaps/${i}.png`);
-    Loaded_Matcaps.push(Loaded_Matcap);
+function Load_Texture(type, index){
+    return textureLoader.load(`./textures/${type}s/${index}.png`);
+}
 
-    // Add an event listener to the MatCap element to apply the material to selected meshes
-    matcap.addEventListener("click", () => {
+function CreateTextureButtonAndEventListener(textureType, i) {
+    // Create the texture button
+    const button = Create_Texture_Button(textureType, i);
+
+    // Load the texture
+    const loadedTexture = Load_Texture(textureType, i);
+
+    // Add the texture to the array
+    const loadedTextures = textureType === "matcap"
+        ? Loaded_Matcaps
+        : Loaded_Normals;
+    loadedTextures.push(loadedTexture);
+
+    // Add an event listener to the button
+    button.addEventListener("click", () => {
+        // Dispose of all loaded textures
+        loadedTextures.forEach((texture) => texture.dispose());
+
+        // Apply the new texture to all selected meshes
+        Selected_Meshes.forEach((mesh) => {
+            if (mesh !== null) {
+                textureType === 'matcap'
+                ? mesh.material[textureType] = loadedTexture
+                : mesh.material.normalMap = loadedTexture
+                mesh.material.needsUpdate = true;
+            }
+        });
+    });
+
+    return button;
+}
+
+for (let i = 0; i < 8; i++) {
+    const matcapButton = CreateTextureButtonAndEventListener("matcap", i);
+    matcaps_panel.appendChild(matcapButton);
+
+    const normalButton = CreateTextureButtonAndEventListener("normal", i);
+    normals_panel.appendChild(normalButton);
+}
+
+// HDRIS
+for (let i = 0; i < 4; i++) {
+    const hdri = document.createElement("div");
+    hdri.id = `hdri-${i}`;
+    hdri.classList.add("panel-texture_hdris-hdri");
+
+    hdris_panel.appendChild(hdri);
+
+    const Loaded_Hdri = hdriLoader.load(
+        `./textures/hdris/${i}.hdr`,
+        () => {
+            Loaded_Hdri.mapping = THREE.EquirectangularReflectionMapping;
+        }
+    );
+
+    Loaded_Hdris.push(Loaded_Hdri);
+
+    
+    hdri.addEventListener("click", () => {
+        for (let i = 0; i < Loaded_Hdris.length; i++) {
+            Loaded_Hdris[i].dispose()
+        }
+
         for (const mesh of Selected_Meshes) {
             if (mesh !== null) {
-                mesh.material.matcap = Loaded_Matcap;
-                mesh.material.needsUpdate = true
-                console.log("applied")
+                mesh.material.envMap = Loaded_Hdri;
+                mesh.material.needsUpdate = true;
             }
         }
-    });
+    })
 }
 
 
+/**
+ * Save Function
+ */
+
+const ObjectLoader = new THREE.ObjectLoader()
+
+
+const save = document.getElementById("save");
+
+save.addEventListener("click", () => {
+    // let JsonSavedWord = JSON.stringify(SavedWord);
+    let JsonSavedScene = JSON.stringify(scene)
+    let JsonSavedShapesContents = JSON.stringify(Shapes_Panel.innerHTML)
+    localStorage.setItem("shapes-panel-contents", JsonSavedShapesContents)
+    localStorage.setItem("three-scene", JsonSavedScene);
+
+})
+
+
+// won't work for heavy scenes
+load.addEventListener("click", () => {
+    const StringifiedScene = localStorage.getItem("three-scene");
+    const loadedScene = ObjectLoader.parse(JSON.parse(StringifiedScene))
+    scene = loadedScene;
+})
 
 
 
@@ -174,6 +274,10 @@ function addMesh() {
         Select_Mesh()
         checkbox_the_meshes()
         slider_the_meshes()
+        shape_info_geometry.innerHTML = Mesh.geometry.type
+        shape_info_material.innerHTML = Mesh.material.type
+
+        console.log(Mesh)
     } else {
         scene_meshes.push(light)
         Selected_Meshes.push(light)
@@ -188,12 +292,7 @@ function addMesh() {
         }
     }
 
-    console.log(scene_meshes)
 }
-
-
-
-
 
 
 let shape = null;
@@ -347,9 +446,6 @@ function Connect_Gui() {
 
     for (let i = 0; i < scene_meshes.length; i++) {
 
-        /// I'd be lying if I told you I know why this works with more than one shape;
-        /// I now believe in miracles
-
         if (scene_meshes[i] !== null) {
 
 
@@ -483,6 +579,8 @@ function Select_Mesh() {
                     // selectedMeshes.push(mesh);
                     selectedMeshes[index] = mesh;
                     shape.style.backgroundColor = "var(--selected)";
+                    shape_info_geometry.innerHTML = mesh.geometry.type
+                    shape_info_material.innerHTML = mesh.material.type
                 }
 
                 // Update the original array
@@ -492,10 +590,19 @@ function Select_Mesh() {
     });
 }
 
-// Shape Specific Options
+Create_Mesh.addEventListener("click", addMesh)
+
+/**
+ * Shape Specific Options
+ */
 
 const rename_shapes = document.getElementById("rename-shapes")
 const delete_shapes = document.getElementById("delete-shapes")
+const shape_info_geometry = document.getElementById("shape-info-geometry")
+const shape_info_material = document.getElementById("shape-info-material")
+
+
+
 
 function Delete_Shapes() {
     let Selected_Meshes_copy = Selected_Meshes.slice();
@@ -506,12 +613,17 @@ function Delete_Shapes() {
             if (mesh) {
                 const shape_gui = document.getElementById(`mesh-${index}`); // remove gui first
                 shape_gui.remove();
+
                 Selected_Meshes[index] = null
                 Selected_Meshes_copy[index] = null
                 // Selected_Meshes_copy.splice(index, 1)
                 // Selected_Meshes.splice(index, 1)
+                
                 scene_meshes[index] = null
                 scene.remove(mesh)
+                
+                mesh.material.dispose()
+                mesh.geometry.dispose()
             }
         }
     }
@@ -530,14 +642,13 @@ function Rename_Shapes() {
 
 }
 
-
-
-
-Create_Mesh.addEventListener("click", addMesh)
-
 delete_shapes.addEventListener("click", () => Delete_Shapes())
-
 rename_shapes.addEventListener("input", () => Rename_Shapes())
+
+
+
+
+
 
 
 /**
@@ -627,6 +738,7 @@ z_view.addEventListener("click", () => {
 })
 
 
+
 // Controls
 let controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
@@ -673,104 +785,80 @@ Coloris({
 })
 
 
-/// radios
 
-// Side
+/**
+ *  Radios, Checkboxes and Sliders
+ */
 
-const radio_side = document.getElementById("radio-side");
-radio_side.addEventListener("input", (e) => {
-    const data = new FormData(radio_side);
 
-    for (const entry of data) {
-        if (Selected_Meshes) {
-            for (let mesh of Selected_Meshes) {
-                if (mesh !== null) {
-                    switch (true) {
-                        case entry[1] == 'frontside':
-                            mesh.material.side = THREE.FrontSide
-                            break;
-                        case entry[1] == 'backside':
-                            mesh.material.side = THREE.BackSide
-                            break;
-                        case entry[1] == 'doubleside':
-                            mesh.material.side = THREE.DoubleSide
-                            break;
-                        default:
-                            console.log("default")
-                            break;
+/// Radios
+
+const radioSide = document.getElementById("radio-side");
+const radioBlending = document.getElementById("radio-blending");
+const radioPrecision = document.getElementById("radio-precision");
+const radioShadowTypes = document.getElementById("radio-shadowTypes");
+const radioToneMapping = document.getElementById("radio-toneMapping");
+
+const radios = [radioSide, radioBlending, radioPrecision, radioShadowTypes, radioToneMapping];
+
+const properties = {
+    side: {
+        1: THREE.FrontSide,
+        2: THREE.BackSide,
+        3: THREE.DoubleSide,
+    },
+    blending: {
+        1: THREE.NormalBlending,
+        2: THREE.AdditiveBlending,
+        3: THREE.SubtractiveBlending,
+        4: THREE.MultiplyBlending,
+    },
+    precision: {
+        1: null,
+        2: "lowp",
+        3: "mediump",
+        4: "highp",
+    },
+    shadowTypes: {
+        1: THREE.BasicShadowMap,
+        2: THREE.PCFShadowMap,
+        3: THREE.PCFSoftShadowMap,
+        4: THREE.VSMShadowMap,
+    },
+    toneMapping: {
+        1: THREE.NoToneMapping,
+        2: THREE.LinearToneMapping,
+        3: THREE.ReinhardToneMapping,
+        4: THREE.CineonToneMapping,
+        5: THREE.ACESFilmicToneMapping,
+    },
+};
+
+radios.forEach((radio) => {
+    radio.addEventListener("input", () => {
+        const data = new FormData(radio);
+        const property = radio.id.split("-")[1];
+
+        for (const entry of data) {
+            if (Selected_Meshes) {
+                for (const mesh of Selected_Meshes) {
+                    if (mesh !== null) {
+                        if (properties[property] === properties.toneMapping || properties[property] === properties.shadowTypes){
+                            if (properties[property] === properties.toneMapping){
+                                renderer.toneMapping = properties[property][entry[1]]; 
+                            }else{
+                                renderer.shadowMap = properties[property][entry[1]]; 
+                            }
+                        }else{
+                            mesh.material[property] = properties[property][entry[1]];
+                            mesh.material.needsUpdate = true;
+                        }
                     }
                 }
             }
         }
-    }
-})
-
-
-// blending
-
-const radio_blending = document.getElementById("radio-blending");
-radio_blending.addEventListener("input", () => {
-    const data = new FormData(radio_blending);
-
-    for (const entry of data) {
-        if (Selected_Meshes) {
-            for (let mesh of Selected_Meshes) {
-                if (mesh !== null) {
-                    switch (true) {
-                        case entry[1] == '1':
-                            mesh.material.blending = THREE.NormalBlending
-                            break;
-                        case entry[1] == '2':
-                            mesh.material.blending = THREE.AdditiveBlending
-                            break;
-                        case entry[1] == '3':
-                            mesh.material.blending = THREE.SubtractiveBlending
-                            break;
-                        case entry[1] == '4':
-                            mesh.material.blending = THREE.MultiplyBlending
-                            break;
-                        default:
-                            console.log("default")
-                            break;
-                    }
-                }
-            }
-        }
-    }
-})
-
-// precision
-
-const radio_percision = document.getElementById("radio-percision");
-radio_percision.addEventListener("input", () => {
-    const data = new FormData(radio_percision);
-
-    for (const entry of data) {
-        if (Selected_Meshes) {
-            for (let mesh of Selected_Meshes) {
-                if (mesh !== null) {
-                    switch (true) {
-                        case entry[1] == '1':
-                            mesh.material.precision = null
-                            break;
-                        case entry[1] == '2':
-                            mesh.material.precision = 'lowp'
-                            break;
-                        case entry[1] == '3':
-                            mesh.material.precision = 'mediump'
-                            break;
-                        case entry[1] == '4':
-                            mesh.material.precision = 'highp'
-                            break;
-                        default:
-                            console.log("default")
-                            break;
-                    }
-                }
-            }
-        }
-    }
-})
+    });
+});
 
 
 
@@ -822,209 +910,183 @@ const cb_shadowreceive = document.getElementById("cb-shadowreceive")
 function checkbox_the_meshes() {
     cb_wireframe.onclick = () => {
         for (const mesh of Selected_Meshes) {
-            mesh.material.wireframe = cb_wireframe.value;
+            if(mesh !== null){
+                mesh.material.wireframe = cb_wireframe.value;
+            }
         }
     };
     cb_visible.onclick = () => {
         for (const mesh of Selected_Meshes) {
-            mesh.material.visible = !cb_visible.value;
+            if(mesh !== null){
+                mesh.material.visible = !cb_visible.value;
+            }
         }
     };
     cb_transparent.onclick = () => {
         for (const mesh of Selected_Meshes) {
-            mesh.material.transparent = cb_transparent.value;
+            if(mesh !== null){
+                mesh.material.transparent = cb_transparent.value;
+            }
         }
     };
     cb_fog.onclick = () => {
         for (const mesh of Selected_Meshes) {
-            mesh.material.fog = cb_fog.value;
+            if(mesh !== null){
+                mesh.material.fog = cb_fog.value;
+            }
         }
     };
     cb_alphahash.onclick = () => {
         for (const mesh of Selected_Meshes) {
-            mesh.material.alphahash = cb_alphahash.value;
+            if(mesh !== null){
+                mesh.material.alphahash = cb_alphahash.value;
+            }
         }
     };
     cb_clipshadows.onclick = () => {
         for (const mesh of Selected_Meshes) {
-            mesh.material.clipShadows = cb_clipshadows.value;
+            if(mesh !== null){
+                mesh.material.clipShadows = cb_clipshadows.value;
+            }
         }
     };
     cb_depthtest.onclick = () => {
         for (const mesh of Selected_Meshes) {
-            mesh.material.depthTest = !cb_depthtest.value;
+            if(mesh !== null){
+                mesh.material.depthTest = !cb_depthtest.value;
+            }
         }
     };
     cb_depthwrite.onclick = () => {
         for (const mesh of Selected_Meshes) {
-            mesh.material.depthWrite = !cb_depthwrite.value;
+            if(mesh !== null){
+                mesh.material.depthWrite = !cb_depthwrite.value;
+            }
         }
     };
     cb_permultialpha.onclick = () => {
         for (const mesh of Selected_Meshes) {
-            mesh.material.premultipliedAlpha = cb_permultialpha.value;
+            if(mesh !== null){
+                mesh.material.premultipliedAlpha = cb_permultialpha.value;
+            }
         }
     };
     cb_dithering.onclick = () => {
         for (const mesh of Selected_Meshes) {
-            mesh.material.dithering = cb_dithering.value;
+            if(mesh !== null){
+                mesh.material.dithering = cb_dithering.value;
+            }
         }
     };
     cb_shadowcast.onclick = () => {
         for (const mesh of Selected_Meshes) {
-            mesh.castShadow = cb_shadowcast.value;
+            if(mesh !== null){
+                mesh.castShadow = cb_shadowcast.value;
+            }
         }
     };
     cb_shadowreceive.onclick = () => {
         for (const mesh of Selected_Meshes) {
-            mesh.receiveShadow = cb_shadowreceive.value;
+            if(mesh !== null){
+                mesh.receiveShadow = cb_shadowreceive.value;
+            }
         }
     };
 }
 
 
 /// sliders
-
-const sldr_opacity = document.getElementById(`sldr_opacity`);
-const sldr_alphatest = document.getElementById(`sldr_alphatest`);
-const sldr_clrcoat = document.getElementById(`sldr_clrcoat`);
-const sldr_ior = document.getElementById(`sldr_ior`);
-const sldr_reflectivity = document.getElementById(`sldr_reflectivity`);
-const sldr_metalness = document.getElementById(`sldr_metalness`);
-const sldr_roughness = document.getElementById(`sldr_roughness`);
-const sldr_irds = document.getElementById(`sldr_irds`);
-const sldr_sheen = document.getElementById(`sldr_sheen`);
-const sldr_transmission = document.getElementById(`sldr_transmission`);
-const sldr_thickness = document.getElementById(`sldr_thickness`);
-
-
-const sldr_opacity_value = document.getElementById(`sldr_opacity_value`);
-const sldr_alphatest_value = document.getElementById(`sldr_alphatest_value`);
-const sldr_clrcoat_value = document.getElementById(`sldr_clrcoat_value`);
-const sldr_ior_value = document.getElementById(`sldr_ior_value`);
-const sldr_reflectivity_value = document.getElementById(`sldr_reflectivity_value`);
-const sldr_metalness_value = document.getElementById(`sldr_metalness_value`);
-const sldr_roughness_value = document.getElementById(`sldr_roughness_value`);
-const sldr_irds_value = document.getElementById(`sldr_irds_value`);
-const sldr_sheen_value = document.getElementById(`sldr_sheen_value`);
-const sldr_transmission_value = document.getElementById(`sldr_transmission_value`);
-const sldr_thickness_value = document.getElementById(`sldr_thickness_value`);
-
-
+const sliderHandlers = {
+    "sldr_opacity": (mesh, value) => {
+        if (mesh !== null) {
+            mesh.material.opacity = value;
+            sldr_opacity_value.value = value;
+            mesh.material.needsUpdate = true;
+        }
+    },
+    "sldr_alphatest": (mesh, value) => {
+        if (mesh !== null) {
+            mesh.material.alphaTest = value;
+            sldr_alphatest_value.value = value;
+            mesh.material.needsUpdate = true;
+        }
+    },
+    "sldr_clrcoat": (mesh, value) => {
+        if (mesh !== null) {
+            mesh.material.clearcoat = value;
+            sldr_clrcoat_value.value = value;
+            mesh.material.needsUpdate = true;
+        }
+    },
+    "sldr_ior": (mesh, value) => {
+        if (mesh !== null) {
+            mesh.material.ior = value;
+            sldr_ior_value.value = value;
+            mesh.material.needsUpdate = true;
+        }
+    },
+    "sldr_reflectivity": (mesh, value) => {
+        if (mesh !== null) {
+            mesh.material.reflectivity = value;
+            sldr_reflectivity_value.value = value;
+            mesh.material.needsUpdate = true;
+        }
+    },
+    "sldr_metalness": (mesh, value) => {
+        if (mesh !== null) {
+            mesh.material.metalness = value;
+            sldr_metalness_value.value = value;
+            mesh.material.needsUpdate = true;
+        }
+    },
+    "sldr_roughness": (mesh, value) => {
+        if (mesh !== null) {
+            mesh.material.roughness = value;
+            sldr_roughness_value.value = value;
+            mesh.material.needsUpdate = true;
+        }
+    },
+    "sldr_irds": (mesh, value) => {
+        if (mesh !== null) {
+            mesh.material.iridescence = value;
+            sldr_irds_value.value = value;
+            mesh.material.needsUpdate = true;
+        }
+    },
+    "sldr_sheen": (mesh, value) => {
+        if (mesh !== null) {
+            mesh.material.sheen = value;
+            sldr_sheen_value.value = value;
+            mesh.material.needsUpdate = true;
+        }
+    },
+    "sldr_transmission": (mesh, value) => {
+        if (mesh !== null) {
+            mesh.material.transmission = value;
+            sldr_transmission_value.value = value;
+            mesh.material.needsUpdate = true;
+        }
+    },
+    "sldr_thickness": (mesh, value) => {
+        if (mesh !== null) {
+            mesh.material.thickness = value;
+            sldr_thickness_value.value = value;
+            mesh.material.needsUpdate = true;
+        }
+    },
+};
 
 function slider_the_meshes() {
-
-    sldr_opacity.oninput = () => {
-        for (let mesh of Selected_Meshes) {
-            if (mesh !== null) {
-                mesh.material.opacity = sldr_opacity.value
-                sldr_opacity_value.value = sldr_opacity.value
-                mesh.material.needsUpdate = true
+    const sliderInputs = Array.from(document.querySelectorAll("input.panel-material_slider-input"));
+    for (const sliderInput of sliderInputs) {
+        sliderInput.oninput = () => {
+            const value = sliderInput.value;
+            for (const mesh of Selected_Meshes) {
+                sliderHandlers[sliderInput.id](mesh, value);
             }
-        }
-    }
-
-    sldr_alphatest.oninput = () => {
-        for (let mesh of Selected_Meshes) {
-            if (mesh !== null) {
-                mesh.material.alphaTest = sldr_alphatest.value
-                sldr_alphatest_value.value = sldr_alphatest.value
-                mesh.material.needsUpdate = true
-            }
-        }
-    }
-
-    sldr_clrcoat.oninput = () => {
-        for (let mesh of Selected_Meshes) {
-            if (mesh !== null) {
-                mesh.material.clearcoat = sldr_clrcoat.value
-                sldr_clrcoat_value.value = sldr_clrcoat.value
-                mesh.material.needsUpdate = true
-            }
-        }
-    }
-
-    sldr_ior.oninput = () => {
-        for (let mesh of Selected_Meshes) {
-            if (mesh !== null) {
-                mesh.material.ior = sldr_ior.value
-                sldr_ior_value.value = sldr_ior.value
-                mesh.material.needsUpdate = true
-            }
-        }
-    }
-
-    sldr_reflectivity.oninput = () => {
-        for (let mesh of Selected_Meshes) {
-            if (mesh !== null) {
-                mesh.material.reflectivity = sldr_reflectivity.value
-                sldr_reflectivity_value.value = sldr_reflectivity.value
-                mesh.material.needsUpdate = true
-            }
-        }
-    }
-
-    sldr_metalness.oninput = () => {
-        for (let mesh of Selected_Meshes) {
-            if (mesh !== null) {
-                mesh.material.metalness = sldr_metalness.value
-                sldr_metalness_value.value = sldr_metalness.value
-                mesh.material.needsUpdate = true
-            }
-        }
-    }
-
-    sldr_roughness.oninput = () => {
-        for (let mesh of Selected_Meshes) {
-            if (mesh !== null) {
-                mesh.material.roughness = sldr_roughness.value
-                sldr_roughness_value.value = sldr_roughness.value
-                mesh.material.needsUpdate = true
-            }
-        }
-    }
-
-    sldr_irds.oninput = () => {
-        for (let mesh of Selected_Meshes) {
-            if (mesh !== null) {
-                mesh.material.iridescence = sldr_irds.value
-                sldr_irds_value.value = sldr_irds.value
-                mesh.material.needsUpdate = true
-            }
-        }
-    }
-
-    sldr_sheen.oninput = () => {
-        for (let mesh of Selected_Meshes) {
-            if (mesh !== null) {
-                mesh.material.sheen = sldr_sheen.value
-                sldr_sheen_value.value = sldr_sheen.value
-                mesh.material.needsUpdate = true
-            }
-        }
-    }
-
-    sldr_transmission.oninput = () => {
-        for (let mesh of Selected_Meshes) {
-            if (mesh !== null) {
-                mesh.material.transmission = sldr_transmission.value
-                sldr_transmission_value.value = sldr_transmission.value
-                mesh.material.needsUpdate = true
-            }
-        }
-    }
-
-    sldr_thickness.oninput = () => {
-        for (let mesh of Selected_Meshes) {
-            if (mesh !== null) {
-                mesh.material.thickness = sldr_thickness.value
-                sldr_thickness_value.value = sldr_thickness.value
-                mesh.material.needsUpdate = true
-            }
-        }
+        };
     }
 }
-
 
 /// info panel
 
@@ -1231,3 +1293,28 @@ tick();
 // // Remove the mesh from the scene.
 // console.log("removing the mesh from the scene: ")
 // scene.remove(mesh);
+
+
+
+// load.addEventListener("click", () => {
+//     const StringifiedScene = localStorage.getItem("three-scene");
+//     // try {
+//     //     // Parse the stringified scene back into an object
+//     //     scene = JSON.parse(StringifiedScene);
+//     // } catch (error) {
+//     //     // The stringified scene object is invalid
+//     //     console.error("Invalid scene object: " + error);
+//     //     return;
+//     // // }
+//     // console.log("scene loaded")
+
+//     const loadedScene = ObjectLoader.parse(JSON.parse(StringifiedScene))
+
+//     // console.log("JSON scene: ")
+//     // console.log(loadedScene)
+//     // console.log("Normal Scene: " )
+//     // console.log(scene)
+
+//     scene = loadedScene;
+
+// })

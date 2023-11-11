@@ -1,29 +1,52 @@
 .panel-texture {
-    overflow: hidden;
 
-    display: grid;
-    place-items: center;
+    overflow: scroll;
 
-    &_matcaps {
-        @include Inner-Wrapper;
+
+    &::-webkit-scrollbar {
+        display: none
+    }
+
+    h2{
+        font-size: 1vw;
+        margin-bottom: 0.4vw;
+        color: var(--secondary);
+    }
+
+    &_matcaps,
+    &_normals, 
+    &_hdris {
+        
+        border-radius: 8px;
+        background-color: var(--secondary);
+        padding: 0.4vw;
         width: 100%;
-        height: 100%;
+        height: 16vh;
 
         display: grid;
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(4, 1fr);
         grid-column-gap: 0.4vw;
         grid-row-gap: 0.4vw;
+        place-items: center;
 
-        &-matcap {
+        margin-bottom: 0.4vw;
+
+
+        &-matcap, &-normal, &-hdri {
             cursor: pointer;
-            height: 1.75vw;
-            width: 1.75vw;
+            height: 1.5vw;
+            width: 1.5vw;
             border-radius: 50%;
+
             // filter: drop-shadow(3px 3px 1px #000000); /// Massive Improvement of Performance if you remove shadow styling
 
-            &:hover{
+            &:hover {
                 transform: translateY(-2px);
             }
+        }
+
+        &-hdri{
+            background-color: black;
         }
     }
 }
