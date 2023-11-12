@@ -10,6 +10,10 @@ html{
   box-sizing: inherit;
 }
 
+.hide {
+  display: none !important;
+}
+
 body{
   height: 100vh;
   display: grid;
@@ -23,36 +27,4 @@ canvas{
   height: 100%;
   overflow: hidden;
   background-color: #222222;
-}
-
-.hide{
-  display: none !important;
-}
-
-
-#loading-screen{
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  background-color: black;
-  z-index: 10000;
-
-  display: grid;
-  place-items: center;
-
-  p{
-    color: #ffffff;
-  }
-
-  h1{
-    color: #ffffff;
-    font-size: 64px;
-  }
-
-  #loader{
-    height: 0.5rem;
-    border-radius: 0.2rem;
-    background-color:  #ffffff;
-    animation: Loading 1s forwards cubic-bezier(0.075, 0.82, 0.165, 1) ;
-  }
 }

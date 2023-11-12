@@ -1,14 +1,14 @@
 .panel-camera{
     overflow: hidden;
-    padding: 0.4vw;
 
+    padding: var(--small);
     color: var(--secondary);
 
     &_radios{
         border: 1px solid var(--secondary);
-        padding: 0.4vw;
-        border-radius: 0.4vw;
-        margin-bottom: 0.4vw;
+        padding: var(--small);
+        border-radius: var(--small);
+        margin-bottom: var(--small);
 
         &-option{
 
@@ -22,17 +22,17 @@
                 align-items: center;
 
                 input{
-                    margin-right: 0.4vw;
+                    margin-right: var(--small);
                 }
 
                 label{
-                    font-size: 0.7vw;
+                    font-size: var(--medium);
                     text-transform: uppercase;
                     
                 }
 
                 &:nth-child(1){
-                    margin-bottom: 0.4vw;
+                    margin-bottom: var(--small);
                 }
             }
         }
@@ -48,22 +48,24 @@
         align-items: center;
         justify-content: center;
 
-        padding: 0.4vw;
+        padding: var(--small);
 
         &-preset{
-            margin-bottom: 0.4vw;
+            @include Clickable;
+            margin-bottom: var(--small);
 
             background-color: var(--primary);
             color: var(--secondary);
             width: 80%;
             height: 1.5rem;
-            border-radius: 0.2vw;
+            border-radius: var(--xsmall);
 
             box-shadow: none;
-            font-size: 0.6vw;
+            font-size: var(--medium);
             font-weight: bolder;
 
             border: none;
+
 
             &:nth-child(3){
                 margin-bottom: 0;

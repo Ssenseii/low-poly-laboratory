@@ -6,46 +6,71 @@
 
 @mixin Panel {
     border: 1px solid var(--secondary);
-    padding: 0.5rem;
+    padding: var(--small);
     display: flex;
     flex-direction: column;
-    gap: 8;
+    gap: var(--small);
 }
 
 @mixin Inner-Wrapper {
-    border-radius: 8px;
+    border-radius: var(--small);
     background-color: var(--secondary);
-    padding: 0.4vw;
-    // margin-bottom: 0.4vw;
+    padding: var(--small);
     overflow: scroll;
-    
-        &::-webkit-scrollbar {
-            display: none
 
-        
-        }
+    &::-webkit-scrollbar {
+        display: none
+    }
 }
 
 @mixin ddw-normal {
     width: 50%;
     height: 1.25vw;
-    border-radius: 8px;
+    border-radius: var(--small);
     background-color: var(--primary);
     color: var(--secondary);
-    font-size: 0.7vw;
-    padding-inline: 0.4vw;
-    outline: none;
+    font-size: var(--medium);
+    font-weight: 700;
+    padding-inline: var(--small);
 }
 
 @mixin button {
-    
-    padding-inline: 0.4vw;
+
+    padding-inline: var(--small);
 
     border: none;
-    border-radius: 0.4vw;
+    border-radius: var(--small);
 
 
-    font-size: 0.7vw;
+    font-size: var(--large);
     text-align: center;
     outline: none;
+}
+
+@mixin Scroll-noBar {
+    overflow: scroll;
+
+    &::-webkit-scrollbar {
+        display: none
+    }
+}
+
+@mixin Clickable {
+    cursor: pointer;
+
+    &:hover {
+        transform: translateY(-2px);
+    }
+
+    &:active {
+        transform: translateY(2px);
+    }
+}
+
+@mixin Clickable-v2 {
+    cursor: pointer;
+
+    &:active {
+        transform: translateY(2px);
+    }
 }

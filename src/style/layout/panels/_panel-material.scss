@@ -5,11 +5,10 @@
     flex-direction: column;
 
     .clr-field {
-        color: #aaaaff;
 
         button {
-            border-top-right-radius: 8px;
-            border-bottom-right-radius: 8px;
+            border-top-right-radius: var(--small);
+            border-bottom-right-radius: var(--small);
             height: fit-content;
         }
     }
@@ -17,18 +16,21 @@
 
 
     &_color {
+        @include Clickable-v2;
+        outline: none;
         border: none;
-        border-radius: 8px;
-        padding: 0.4vw;
+        border-radius: var(--small);
+        padding: var(--small);
 
         height: 2rem;
         width: 100%;
         background: linear-gradient(to left, var(--color-picked) 20%, #ffffff);
 
-        font-size: 1vw;
+        font-size: var(--xlarge);
+        text-transform: uppercase;
         font-weight: bolder;
 
-        margin-bottom: 0.8vh !important;
+        margin-bottom: 0.8vh !important; /// Bypass the original css 
     }
 
 
@@ -37,14 +39,14 @@
 
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        grid-column-gap: 8px;
-        grid-row-gap: 8px;
+        grid-column-gap: var(--small);
+        grid-row-gap: var(--small);
 
         height: 16vh;
 
         overflow: scroll;
 
-        font-size: 0.8vw;
+        font-size: var(--large);
 
         margin-bottom: 0.8vh;
 
@@ -52,13 +54,13 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
 
             background-color: var(--primary);
             color: var(--secondary);
 
-            padding: 0.4vw;
-            border-radius: 0.4vw;
+            padding: var(--small);
+            border-radius: var(--small);
 
             width: 100%;
             height: 8rem;
@@ -68,22 +70,20 @@
             p {
                 font-weight: bolder;
                 text-align: center;
-                margin-bottom: 0.4vw;
-                font-size: 0.8vw;
+                margin-bottom: var(--small);
+                font-size: var(--large);
+                margin-left: var(--xsmall)
             }
 
             fieldset {
                 border: none;
                 height: 70%;
-                overflow: scroll;
-
-                &::-webkit-scrollbar {
-                    display: none
-                }
+                @include Scroll-noBar;
             }
 
             &-radio {
-                padding: 0.1vw;
+                padding: var(--xsmall);
+                margin-left: var(--small);
 
                 display: flex;
                 flex-direction: row;
@@ -91,22 +91,20 @@
 
                 width: 100%;
 
-                margin-bottom: 0.2vw;
+                margin-bottom: var(--xsmall);
 
                 &:last-child {
                     margin-bottom: 0;
                 }
 
                 input {
-                    margin-right: 0.3vw;
+                    margin-right: var(--small);
+                    accent-color: var(--accent);
                 }
 
                 label {
                     text-transform: uppercase;
-                    font-size: 0.6vw;
-                    overflow: hidden;
-                    white-space: nowrap;
-                    text-overflow: ellipsis;
+                    font-size: var(--medium);
                 }
             }
         }
@@ -118,12 +116,12 @@
 
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        grid-column-gap: 8px;
-        grid-row-gap: 8px;
+        grid-column-gap: var(--small);
+        grid-row-gap: var(--small);
 
         overflow: scroll;
 
-        font-size: 0.8vw;
+        font-size: var(--large);
 
         margin-bottom: 0.8vh;
 
@@ -135,11 +133,12 @@
             align-items: center;
 
             .checkbox {
-                margin-right: 0.5rem;
+                @include Clickable;
+                margin-right: var(--small);
             }
 
             label {
-                font-size: 0.6vw;
+                font-size: var(--medium);
                 font-weight: 700;
                 color: var(--primary);
                 text-transform: uppercase;
@@ -160,28 +159,28 @@
             align-items: center;
             justify-content: space-between;
 
-            margin-bottom: 0.5rem;
+            margin-bottom: var(--small);
 
-            padding-inline: 0.4vw;
+            padding-inline: var(--small);
 
             label {
-                font-size: 0.7vw;
+                font-size: var(--medium);
                 font-weight: 700;
-                margin-right: 1rem;
+                margin-right: var(--medium);
                 text-transform: uppercase;
             }
 
             .panel-material_slider-input {
                 margin-top: 0.5vh;
-                margin-right: 0.5rem;
+                margin-right: var(--small);
                 width: 7vw;
                 accent-color: var(--accent);
-                height: 1rem;
+                height: var(--medium);
             }
 
             .panel-material_slider-value {
                 margin-top: 0.4vh;
-                font-size: 0.8vw;
+                font-size: var(--medium);
                 font-weight: 700;
                 width: 1.6vw;
                 background: transparent;

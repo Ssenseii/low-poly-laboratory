@@ -1,5 +1,5 @@
 .panel-options {
-   overflow: hidden;
+overflow: hidden;
 
     &_general {
         @include Inner-Wrapper;
@@ -8,7 +8,7 @@
         flex-direction: column;
         align-items: center;
 
-        margin-bottom: 0.4vw;
+        margin-bottom: var(--small);
 
         &-rename {
             display: flex;
@@ -16,33 +16,34 @@
             align-items: center;
             justify-content: space-evenly;
 
-            margin-bottom: 0.4vw;
+            margin-bottom: var(--small);
 
             label {
                 font-size: 0.8vw;
                 font-weight: bold;
-                margin-right: 0.4vw;
+                margin-right: var(--small);
             }
 
             input {
                 width: 80%;
-                height: 1vw;
-                border-radius: 0.4vw;
+                height: 1.2vw;
+                border-radius: var(--small);
                 border: none;
 
                 background-color: var(--primary);
                 color: var(--secondary);
-                padding-inline: 0.4vw;
+                padding-inline: var(--small);
             }
 
         }
 
         &-delete {
+            @include Clickable;
             width: 80%;
-            border-radius: 0.4vw;
+            border-radius: var(--small);
             border: none;
-            height: 1vw;
-            font-size: 0.8vw;
+            height: 1.8vw;
+            font-size: var(--medium);
             background-color: var(--danger-action);
             color: var(--secondary);
         }
@@ -53,12 +54,12 @@
         height: 10vh;
 
         p {
-            font-size: 0.8vw;
+            font-size: var(--large);
             font-weight: bold;
-            margin-right: 0.4vw;
+            margin-right: var(--small);
 
             span{
-                font-size: 0.6vw;
+                font-size: var(--large);
                 font-weight: normal;
                 margin-left: 1vw;
                 display: block;

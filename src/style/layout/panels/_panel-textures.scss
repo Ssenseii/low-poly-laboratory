@@ -8,8 +8,8 @@
     }
 
     h2{
-        font-size: 1vw;
-        margin-bottom: 0.4vw;
+        font-size: var(--large);
+        margin-bottom: var(--small);
         color: var(--secondary);
     }
 
@@ -18,36 +18,33 @@
     &_bumps, 
     &_hdris {
         
-        border-radius: 8px;
+        border-radius: var(--small);
         background-color: var(--secondary);
-        padding: 0.4vw;
+        padding: var(--small);
         width: 100%;
         height: 16vh;
 
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        grid-column-gap: 0.4vw;
-        grid-row-gap: 0.4vw;
+        grid-column-gap: var(--small);
+        grid-row-gap: var(--small);
         place-items: center;
 
-        margin-bottom: 0.4vw;
+        margin-bottom: var(--small);
 
 
         &-matcap, &-normal, &-hdri, &-bump {
-            cursor: pointer;
+            @include Clickable;
             height: 1.5vw;
             width: 1.5vw;
             border-radius: 50%;
 
             // filter: drop-shadow(3px 3px 1px #000000); /// Massive Improvement of Performance if you remove shadow styling
-
-            &:hover {
-                transform: translateY(-2px);
-            }
         }
 
         &-hdri{
-            background-color: black;
+            border: var(--small) solid var(--primary);
+            background-color: var(--secondary);
         }
     }
 }

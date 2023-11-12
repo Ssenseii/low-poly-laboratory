@@ -13,11 +13,16 @@
 </head>
 
 <body>
+    
+    <!-- Loading Screen: When working, remove this and its js code -->
+<!--     
     <div id="loading-screen">
         <h1 id="title">LOW POLY LABORATORY</h1>
         <p>alpha 0.1</p>
         <div id="loader"></div>
-    </div>
+    </div> -->
+
+
     <main class="editor">
 
         <!-- Top Section -->
@@ -35,11 +40,24 @@
                 <!-- Actions: Language - Theme -->
 
                 <div class="panel-top_actions">
-                    <svg id="load" xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8" fill="none">
-                        <circle cx="4" cy="4" r="3.5" stroke="#D6DAD1" />
+                    <!-- save -->
+                    <svg id="save" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path
+                            d="M5 21h14a2 2 0 0 0 2-2V8a1 1 0 0 0-.29-.71l-4-4A1 1 0 0 0 16 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2zm10-2H9v-5h6zM13 7h-2V5h2zM5 5h2v4h8V5h.59L19 8.41V19h-2v-5a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v5H5z">
+                        </path>
                     </svg>
-                    <svg id="save" xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8" fill="none">
-                        <circle cx="4" cy="4" r="3.5" stroke="#D6DAD1" />
+                    <!-- load -->
+                    
+                    <svg id="load" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path d="M11 15h2V9h3l-4-5-4 5h3z"></path>
+                        <path d="M20 18H4v-7H2v7c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2v-7h-2v7z"></path>
+                    </svg>
+                    
+                    <!-- theme -->
+                    <svg id="theme-toggle" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path
+                            d="M6.993 12c0 2.761 2.246 5.007 5.007 5.007s5.007-2.246 5.007-5.007S14.761 6.993 12 6.993 6.993 9.239 6.993 12zM12 8.993c1.658 0 3.007 1.349 3.007 3.007S13.658 15.007 12 15.007 8.993 13.658 8.993 12 10.342 8.993 12 8.993zM10.998 19h2v3h-2zm0-17h2v3h-2zm-9 9h3v2h-3zm17 0h3v2h-3zM4.219 18.363l2.12-2.122 1.415 1.414-2.12 2.122zM16.24 6.344l2.122-2.122 1.414 1.414-2.122 2.122zM6.342 7.759 4.22 5.637l1.415-1.414 2.12 2.122zm13.434 10.605-1.414 1.414-2.122-2.122 1.414-1.414z">
+                        </path>
                     </svg>
                 </div>
             </div>

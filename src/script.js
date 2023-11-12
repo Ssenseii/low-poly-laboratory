@@ -82,19 +82,39 @@ const ObjectLoader = new THREE.ObjectLoader()
 /// Loading screen:
 
 /* JavaScript */
-document.addEventListener("DOMContentLoaded", function () {
-    // Show the loading screen
+// document.addEventListener("DOMContentLoaded", function () {
+//     // Show the loading screen
     
-    document.getElementById("loading-screen").style.display = "grid";
+//     document.getElementById("loading-screen").style.display = "grid";
 
-    // Wait for all scripts and assets to load
-    window.addEventListener("load", function () {
-        // Hide the loading screen
-        document.getElementById("loading-screen").style.display = "none";
-    });
+//     // Wait for all scripts and assets to load
+//     window.addEventListener("load", function () {
+//         // Hide the loading screen
+//         document.getElementById("loading-screen").style.display = "none";
+//     });
+// });
+
+/// Theme
+
+const Theme_Toggle = document.getElementById("theme-toggle")
+
+Theme_Toggle.addEventListener("click", () => {
+    // Set the default theme
+    let defaultTheme = document.documentElement.classList.contains("light-theme");
+
+    // Toggle the theme
+    if (defaultTheme) {
+        document.documentElement.classList.remove("light-theme");
+        document.documentElement.classList.add("dark-theme");
+    } else {
+        document.documentElement.classList.remove("dark-theme");
+        document.documentElement.classList.add("light-theme");
+    }
+
+    // Set the CSS variables
+    document.documentElement.style.setProperty("--primary", defaultTheme ? "#25202d" : "#D6DaD1");
+    document.documentElement.style.setProperty("--secondary", defaultTheme ? "#D6DAD1" : "#25202d" );
 });
-
-
 
 
 

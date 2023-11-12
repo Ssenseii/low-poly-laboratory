@@ -7,13 +7,17 @@
         height: 100%;
         
         h2{
-            font-size: 0.8vw;
-            margin-bottom: 0.2vw;
+            font-size: var(--medium);
+            margin-bottom: var(--xsmall);
         }
 
         p{
-            font-size: 0.6vw;
-            text-indent: 0.8vw;
+            font-size: var(--medium);
+            text-indent: var(--large);
+
+            &:nth-child(4){
+                margin-bottom: var(--small);
+            }
         }
     }
 }

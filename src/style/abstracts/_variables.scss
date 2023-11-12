@@ -1,4 +1,7 @@
 :root{
+
+      /// Colors
+      
       --primary: #25202c;
       --secondary: #D6DAD1;
       --accent: #22a497;
@@ -9,4 +12,13 @@
       --danger-action: #71070D;
 
       --color-picked: #ffffff;
+
+
+      /// Sizes
+      
+      --xsmall: 0.2vw;
+      --small: 0.4vw;
+      --medium: 0.6vw;
+      --large: 0.8vw;
+      --xlarge: 1vw;
 }
