@@ -32,7 +32,7 @@ A **threejs**-Powered **3d modeling** website written entirely in Vanilla JS.
 - Light/dark mode toggle
 - ~~Autosave~~ (size issues)
 - Fullscreen mode
-- Cross platform
+- Cross-platform
 - Creating and Editing 3D models
 - Applying Transformations to 3d Models
 - Constants Manipulations
@@ -44,7 +44,7 @@ A **threejs**-Powered **3d modeling** website written entirely in Vanilla JS.
 - Scalable for next versions of threejs (you can always add more)
 - Minified Assets (under 1k)
 
-### In developement: 
+### In development: 
 
 - 3D Gizmo for properties (scale, position and rotate)
 - Editor Settings (file - edit - view)
@@ -68,7 +68,7 @@ A **threejs**-Powered **3d modeling** website written entirely in Vanilla JS.
 - Project Management (deadlines)
 - DOM manipulations
 - JSON manipulations
-- Software Developement Concepts (architectures)
+- Software development concepts (architectures)
 - Graphics manipulations
 - How to detect and handle bugs
 - **Unit Testing** 
@@ -84,11 +84,11 @@ A **threejs**-Powered **3d modeling** website written entirely in Vanilla JS.
 
 
 **Personal:**
-- Handeling concurrent problems
+- Handling concurrent problems
 - Time Management with Big Projects
 - Researching and working with unknown utilities
 - Reading code
-- That I should read more on software developement
+- That I should read more on software development
 
 ## FAQ
 
@@ -98,15 +98,15 @@ Sometimes I want to create low poly models for my websites and using dat.gui, wh
 
 My editor is fast to set up. It exports directly to human-readable code (as well as other formats) that you can copy-paste on your own projects and have them working perfectly.
 
-Also it was a very fun challenge, and I wanted to understand more of threejs's secrets 
+Also, it was an enjoyable challenge, and I wanted to understand more of Threejs's secrets 
 
 #### What is it?
 
-Well in my mind, it's like an open-source 3D modeling  software but for threejs's pre-built shapes. It applies every known material and geometry transformation on the shapes and seperates them so that you can work on each one independantly, or more than one at a time !!!
+Well, it's like an open-source 3D modeling  software but for threejs's pre-built shapes. It applies every known material and geometry transformation on the shapes and separates them so that you can work on each one independently, or more than one at a time !!!
 
-- It's built for scalabality, so I'm always adding more.
+- It's built for scalability, so I'm always adding more.
 - It's easy to use 
-- Best for Low Poly Models though it has features for glass, metal, plastic, and light reflections...
+- Is best for Low Poly Models though it has features for glass, metal, plastic, and light reflections...
 - almost no memory limitations (fps drops after 281 shapes) 
 
 #### What isn't it?
