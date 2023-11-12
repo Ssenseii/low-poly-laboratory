@@ -1,157 +1,101 @@
+/* 
+    Imports
+*/
+
+// THREEJS
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader'
+
+
+// COLORIS
 import "@melloware/coloris/dist/coloris.css";
 import Coloris from "@melloware/coloris";
 
 
 
+
+
+
+
 /**
- *  Loaders
+    Base
 */
 
-const textureLoader = new THREE.TextureLoader();
-const hdriLoader = new RGBELoader();
+/// CONSTANTS
 
 
-/**
- * Base
-*/
-
-
-// Canvas
-const canvas_wrapper = document.querySelector('div.panel-canvas')
-const canvas = document.querySelector('canvas.webgl')
-let scene = new THREE.Scene();
-
-// Scene
-// const scene = new THREE.Scene()
-
-/**
- * Textures
- */
-
-
-const matcaps_panel = document.getElementById("matcaps-panel");
-const normals_panel = document.getElementById("normals-panel");
-const hdris_panel = document.getElementById("hdris-panel")
-
-// Create a texture material array outside of the loop
+/// Texture Arrays
+const scene_meshes = [];   /// Main Array
 const Loaded_Matcaps = [];
 const Loaded_Normals = [];
+const Loaded_Bumps = [];
 const Loaded_Hdris = [];
 
-function Create_Texture_Button(type, index){
-    const texture = document.createElement("div");
-    texture.id = `${type}-${index}`;
-    texture.classList.add(`panel-texture_${type}s-${type}`);
-    texture.style.background = `url("textures/${type}s/${index}.png")`;
-    texture.style.backgroundSize = "cover";
-    return texture;
-}
-
-function Load_Texture(type, index){
-    return textureLoader.load(`./textures/${type}s/${index}.png`);
-}
-
-function CreateTextureButtonAndEventListener(textureType, i) {
-    // Create the texture button
-    const button = Create_Texture_Button(textureType, i);
-
-    // Load the texture
-    const loadedTexture = Load_Texture(textureType, i);
-
-    // Add the texture to the array
-    const loadedTextures = textureType === "matcap"
-        ? Loaded_Matcaps
-        : Loaded_Normals;
-    loadedTextures.push(loadedTexture);
-
-    // Add an event listener to the button
-    button.addEventListener("click", () => {
-        // Dispose of all loaded textures
-        loadedTextures.forEach((texture) => texture.dispose());
-
-        // Apply the new texture to all selected meshes
-        Selected_Meshes.forEach((mesh) => {
-            if (mesh !== null) {
-                textureType === 'matcap'
-                ? mesh.material[textureType] = loadedTexture
-                : mesh.material.normalMap = loadedTexture
-                mesh.material.needsUpdate = true;
-            }
-        });
-    });
-
-    return button;
-}
-
-for (let i = 0; i < 8; i++) {
-    const matcapButton = CreateTextureButtonAndEventListener("matcap", i);
-    matcaps_panel.appendChild(matcapButton);
-
-    const normalButton = CreateTextureButtonAndEventListener("normal", i);
-    normals_panel.appendChild(normalButton);
-}
-
-// HDRIS
-for (let i = 0; i < 4; i++) {
-    const hdri = document.createElement("div");
-    hdri.id = `hdri-${i}`;
-    hdri.classList.add("panel-texture_hdris-hdri");
-
-    hdris_panel.appendChild(hdri);
-
-    const Loaded_Hdri = hdriLoader.load(
-        `./textures/hdris/${i}.hdr`,
-        () => {
-            Loaded_Hdri.mapping = THREE.EquirectangularReflectionMapping;
-        }
-    );
-
-    Loaded_Hdris.push(Loaded_Hdri);
-
-    
-    hdri.addEventListener("click", () => {
-        for (let i = 0; i < Loaded_Hdris.length; i++) {
-            Loaded_Hdris[i].dispose()
-        }
-
-        for (const mesh of Selected_Meshes) {
-            if (mesh !== null) {
-                mesh.material.envMap = Loaded_Hdri;
-                mesh.material.needsUpdate = true;
-            }
-        }
-    })
-}
 
 
-/**
- * Save Function
- */
+// canvas 
+const canvas_wrapper = document.querySelector('div.panel-canvas')
+const canvas = document.querySelector('canvas.webgl')
 
+
+// Panel: Textures
+const matcaps_panel = document.getElementById("matcaps-panel");
+const normals_panel = document.getElementById("normals-panel");
+const bumps_panel = document.getElementById("bumps-panel");
+const hdris_panel = document.getElementById("hdris-panel")
+
+
+// Panel: Geometry
+const Shapes_Selector = document.getElementById("shapes");
+const Materials_Selector = document.getElementById("materials");
+const Create_Mesh = document.getElementById("generator");
+const Shapes_Panel = document.getElementById("shapes_panel");
+
+
+
+// Saving Buttons
+const save = document.getElementById("save");
+const load = document.getElementById("load");
+
+
+/// VARIABLES
+let scene = new THREE.Scene();
+let Selected_Meshes = [];       /// keep like this so that you can modify it with the select_shape function
+let geometry;
+let material;
+let light;
+let shape;
+
+
+
+/// LOADERS
+const textureLoader = new THREE.TextureLoader();
+const hdriLoader = new RGBELoader();
 const ObjectLoader = new THREE.ObjectLoader()
 
 
-const save = document.getElementById("save");
-
-save.addEventListener("click", () => {
-    // let JsonSavedWord = JSON.stringify(SavedWord);
-    let JsonSavedScene = JSON.stringify(scene)
-    let JsonSavedShapesContents = JSON.stringify(Shapes_Panel.innerHTML)
-    localStorage.setItem("shapes-panel-contents", JsonSavedShapesContents)
-    localStorage.setItem("three-scene", JsonSavedScene);
-
-})
 
 
-// won't work for heavy scenes
-load.addEventListener("click", () => {
-    const StringifiedScene = localStorage.getItem("three-scene");
-    const loadedScene = ObjectLoader.parse(JSON.parse(StringifiedScene))
-    scene = loadedScene;
-})
+
+
+/// Loading screen:
+
+/* JavaScript */
+document.addEventListener("DOMContentLoaded", function () {
+    // Show the loading screen
+    
+    document.getElementById("loading-screen").style.display = "grid";
+
+    // Wait for all scripts and assets to load
+    window.addEventListener("load", function () {
+        // Hide the loading screen
+        document.getElementById("loading-screen").style.display = "none";
+    });
+});
+
+
+
 
 
 
@@ -160,18 +104,73 @@ load.addEventListener("click", () => {
  */
 
 
+
+/// Utils
+
+function Iterate_Over(array, callback) {
+    for (let element of array) {
+        if (element !== null) {
+            callback(element)
+        }
+    }
+}
+
+
+
+const Coordinate = (index, property) => {
+
+    const Slider = (index, property, axis) => {
+        return `<div class="panel-geometry_shapes-panel-sliders-slider">
+                                    <label>${axis}: </label>
+                                    <div class="slider">
+                                        <input id="slider-${index}-${property}-${axis}"
+                                            class="input_slider"
+                                            min="-10" 
+                                            max="10" 
+                                            step="0.01" 
+                                            type="range">
+                                        <input type="text" value="0" id="slider-${index}-${property}-${axis}-value">
+                                    </div>
+                                </div>`
+    }
+
+    return `<button class="panel-geometry_shapes-panel-dropdown" onclick="toggleSliders(${index}, '${property}')">${property}</button>
+                        <div id="panel-${index}-${property}" class="panel-geometry_shapes-panel-sliders">
+                            <div class="panel-geometry_shapes-panel-sliders-container">
+                                ${Slider(index, property, 'x')}
+                                ${Slider(index, property, 'y')}
+                                ${Slider(index, property, 'z')}
+                            </div>
+                        </div>`
+}
+
+
+
+
+
+
+/**
+ * Save Function
+ */
+
+
+save.addEventListener("click", () => {
+    let JsonSavedScene = JSON.stringify(scene)
+    localStorage.setItem("three-scene", JsonSavedScene);
+})
+
+
+// won't work for heavy scenes that exceed a certain quota (think of other solution)
+load.addEventListener("click", () => {
+    const StringifiedScene = localStorage.getItem("three-scene");
+    const loadedScene = ObjectLoader.parse(JSON.parse(StringifiedScene))
+    scene = loadedScene;
+})
+
+
+
 /// Create New Mesh
 
-const Shapes_Selector = document.getElementById("shapes");
-const Materials_Selector = document.getElementById("materials");
-const Create_Mesh = document.getElementById("generator");
-
-const Shapes_Panel = document.getElementById("shapes_panel");
-
-const scene_meshes = [];
-let Selected_Meshes = [];       /// keep like this so that you can modify it with the select_shape function
-
-let geometry, material, light;
 
 Shapes_Selector.value = 1;
 Materials_Selector.value = 1;
@@ -212,7 +211,7 @@ function addMesh() {
             geometry = new THREE.OctahedronGeometry(1, 2)
             break;
         case Shapes_Selector.value == "12":
-            light = new THREE.AmbientLight(0x404040);
+            light = new THREE.AmbientLight(0x4D4D4D);
             break;
         case Shapes_Selector.value == "13":
             light = new THREE.DirectionalLight(0xffffff);
@@ -265,20 +264,21 @@ function addMesh() {
             material = new THREE.MeshBasicMaterial({ color: '#ffaaaa' })
     }
 
+    /// If it's not a light, else if it is.
     if (+Shapes_Selector.value <= 11) {
-        const Mesh = new THREE.Mesh(geometry, material)
-        scene_meshes.push(Mesh)
-        Selected_Meshes.push(Mesh)
-        Add_Gui(scene_meshes.indexOf(Mesh));
-        Connect_Gui()
-        Select_Mesh()
-        checkbox_the_meshes()
-        slider_the_meshes()
+        const Mesh = new THREE.Mesh(geometry, material)                 /// Create the Mesh
+        scene_meshes.push(Mesh)                                         /// Add it to the Array of Meshes to be Compiled
+        Selected_Meshes.push(Mesh)                                      /// Select it
+        Add_Gui(scene_meshes.indexOf(Mesh));                            /// Create a GUI for it
+        Connect_Gui()                                                   /// Connect the GUI to the Mesh
+        Select_Mesh()                                                   /// You can now Select it and UnSelect it 
+        Checkbox_Meshes()                                               /// Connect the new Mesh to the Checkboxes
+        Slider_Meshes()                                                 /// Connect the new Mesh to the Sliders
+
         shape_info_geometry.innerHTML = Mesh.geometry.type
         shape_info_material.innerHTML = Mesh.material.type
-
-        console.log(Mesh)
-    } else {
+    }
+    else {
         scene_meshes.push(light)
         Selected_Meshes.push(light)
         Add_Gui(scene_meshes.indexOf(light))
@@ -286,161 +286,37 @@ function addMesh() {
         Select_Mesh()
     }
 
-    for (let mesh of scene_meshes) {
-        if (mesh !== null) {
-            scene.add(mesh)
-        }
-    }
+
+    /// Add all scene meshes to the scene
+    Iterate_Over(scene_meshes, mesh => scene.add(mesh))
 
 }
 
 
-let shape = null;
 function Add_Gui(index) {
-    shape = document.createElement("div") /// might have to get this outside the function scope
-    shape.classList.add('panel-geometry_shapes-container')
-    shape.id = `mesh-${index}`
+    shape = document.createElement("div");
+    shape.classList.add('panel-geometry_shapes-container');
+    shape.id = `mesh-${index}`;
     shape.innerHTML = `<button id="shape-${index}" style="background-color: var(--selected);" class="panel-geometry_shapes-button" onclick="toggleShape(${index})">Shape #${index} </button>
                         <div id="panel-${index}" class="panel-geometry_shapes-panel">
 
                         <!-- Position Coordinates -->
-                        <button class="panel-geometry_shapes-panel-dropdown" onclick="toggleSliders(${index}, 'position')">Position</button>
-                        <div id="panel-${index}-position" class="panel-geometry_shapes-panel-sliders">
-                            <div class="panel-geometry_shapes-panel-sliders-container">
-                                <div class="panel-geometry_shapes-panel-sliders-slider">
-                                    <label>x: </label>
-                                    <div class="slider">
-                                        <input id="slider-${index}-position-x"
-                                            class="input_slider"
-                                            min="-10" 
-                                            max="10" 
-                                            step="0.01" 
-                                            type="range">
-                                        <input type="text" value="0" id="slider-${index}-position-x-value">
-                                    </div>
-                                </div>
-                                <div class="panel-geometry_shapes-panel-sliders-slider">
-                                    <label>y: </label>
-                                    <div class="slider">
-                                            <input id="slider-${index}-position-y"
-                                                class="input_slider"
-                                            min="-10" 
-                                            max="10" 
-                                            step="0.01" 
-                                            type="range">
-                                        <input type="text" value="0" id="slider-${index}-position-y-value">
-                                    </div>
-                                </div>
-                                <div class="panel-geometry_shapes-panel-sliders-slider">
-                                    <label>z: </label>
-                                    <div class="slider">
-                                            <input id="slider-${index}-position-z"
-                                                class="input_slider"
-                                            min="-10" 
-                                            max="10" 
-                                            step="0.01" 
-                                            type="range">
-                                        <input type="text" value="0" id="slider-${index}-position-z-value">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
+                        ${Coordinate(index, 'position')}
+                        
                         <!-- Scale Coordinates -->
-                        <button class="panel-geometry_shapes-panel-dropdown" onclick="toggleSliders(${index}, 'scale')">Scale</button>
-                        <div id="panel-${index}-scale" class="panel-geometry_shapes-panel-sliders">
-                            <div class="panel-geometry_shapes-panel-sliders-container">
-                                <div class="panel-geometry_shapes-panel-sliders-slider">
-                                    <label>x: </label>
-                                    <div class="slider">
-                                        <input id="slider-${index}-scale-x"
-                                            class="input_slider"
-                                            min="0" 
-                                            max="20" 
-                                            step="0.1"
-                                            value="1" 
-                                            type="range">
-                                        <input type="text" value="1" id="slider-${index}-scale-x-value">
-                                    </div>
-                                </div>
-                                <div class="panel-geometry_shapes-panel-sliders-slider">
-                                    <label>y: </label>
-                                    <div class="slider">
-                                            <input id="slider-${index}-scale-y"
-                                                class="input_slider"
-                                            min="0" 
-                                            max="20" 
-                                            step="0.1"
-                                            value="1" 
-                                            type="range">
-                                        <input type="text" value="1" id="slider-${index}-scale-y-value">
-                                    </div>
-                                </div>
-                                <div class="panel-geometry_shapes-panel-sliders-slider">
-                                    <label>z: </label>
-                                    <div class="slider">
-                                            <input id="slider-${index}-scale-z"
-                                                class="input_slider"
-                                            min="0" 
-                                            max="20" 
-                                            step="0.1"
-                                            value="1" 
-                                            type="range">
-                                        <input type="text" value="1" id="slider-${index}-scale-z-value" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
+                        ${Coordinate(index, 'scale')}
+                        
                         <!-- Rotation Coordinates -->
-                        <button  class="panel-geometry_shapes-panel-dropdown" onclick="toggleSliders(${index}, 'rotation')">Rotation</button>
-                        <div id="panel-${index}-rotation" class="panel-geometry_shapes-panel-sliders">
-                            <div class="panel-geometry_shapes-panel-sliders-container">
-                                <div class="panel-geometry_shapes-panel-sliders-slider">
-                                    <label>x: </label>
-                                    <div class="slider">
-                                        <input id="slider-${index}-rotation-x"
-                                            class="input_slider"
-                                            min="-3.14159265359" 
-                                            max="3.14159265359" 
-                                            step="0.19634954084"
-                                            value="0" 
-                                            type="range">
-                                        <input type="text" value="0" id="slider-${index}-rotation-x-value">
-                                    </div>
-                                </div>
-                                <div class="panel-geometry_shapes-panel-sliders-slider">
-                                    <label>y: </label>
-                                    <div class="slider">
-                                            <input id="slider-${index}-rotation-y"
-                                                class="input_slider"
-                                            min="-3.14159265359" 
-                                            max="3.14159265359" 
-                                            step="0.19634954084"
-                                            value="0" 
-                                            type="range">
-                                        <input type="text" value="0" id="slider-${index}-rotation-y-value">
-                                    </div>
-                                </div>
-                                <div class="panel-geometry_shapes-panel-sliders-slider">
-                                    <label>z: </label>
-                                    <div class="slider">
-                                            <input id="slider-${index}-rotation-z"
-                                                class="input_slider"
-                                            min="-3.14159265359" 
-                                            max="3.14159265359" 
-                                            step="0.19634954084"
-                                            value="0" 
-                                            type="range">
-                                        <input type="text" value="0" id="slider-${index}-rotation-z-value">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>`
-    Shapes_Panel.appendChild(shape)
+                        ${Coordinate(index, 'rotation')}
+                    
+                        </div>`
 
+    Shapes_Panel.appendChild(shape)
 }
+
+
+
+
 
 function Connect_Gui() {
 
@@ -618,10 +494,10 @@ function Delete_Shapes() {
                 Selected_Meshes_copy[index] = null
                 // Selected_Meshes_copy.splice(index, 1)
                 // Selected_Meshes.splice(index, 1)
-                
+
                 scene_meshes[index] = null
                 scene.remove(mesh)
-                
+
                 mesh.material.dispose()
                 mesh.geometry.dispose()
             }
@@ -684,7 +560,7 @@ const cameraOrtho = new THREE.OrthographicCamera(sizes.width / - 2, sizes.width 
 camera.position.set(2, 1, 2)
 cameraOrtho.position.set(-3.32, 1.93, -4.88)
 
-if(scene){
+if (scene) {
     scene.add(camera)
 }
 
@@ -753,9 +629,142 @@ const renderer = new THREE.WebGLRenderer({
 
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+renderer.shadowMap.enabled = true
+
+/**
+ * Textures
+ */
 
 
-/// Core #2
+
+function Create_Texture_Button(type, index) {
+    const texture = document.createElement("div");
+    texture.id = `${type}-${index}`;
+    texture.classList.add(`panel-texture_${type}s-${type}`);
+    texture.style.background = `url("textures/${type}s/${index}.png")`;
+    texture.style.backgroundSize = "cover";
+    return texture;
+}
+
+function Load_Texture(type, index) {
+    return textureLoader.load(`textures/${type}s/${index}.png`);
+}
+
+
+function CreateTextureButtonAndEventListener(textureType, i) {
+    // Create the texture button
+    const button = Create_Texture_Button(textureType, i);
+
+    // Load the texture
+    const loadedTexture = Load_Texture(textureType, i);
+
+    // Add the texture to the array
+    let loadedTextures;
+
+
+    switch (true) {
+        case textureType == "matcap":
+            loadedTextures = Loaded_Matcaps;
+            break;
+        case textureType == "normal":
+            loadedTextures = Loaded_Normals;
+            break;
+        case textureType == "bump":
+            loadedTextures = Loaded_Bumps;
+            break;
+        // Add more cases here for other texture types
+        default:
+            console.log("No array for the texture type")
+            break;
+    };
+
+
+
+    loadedTextures.push(loadedTexture);
+
+    // Add an event listener to the button
+    button.addEventListener("click", () => {
+        // Dispose of all loaded textures
+        loadedTextures.forEach((texture) => texture.dispose());
+
+        // Apply the new texture to all selected meshes
+        Selected_Meshes.forEach((mesh) => {
+            if (mesh !== null) {
+                switch (true) {
+                    case textureType == "matcap":
+                        mesh.material.matcap = loadedTexture;
+                        mesh.material.needsUpdate = true;
+                        break;
+                    case textureType == "normal":
+                        mesh.material.normalMap = loadedTexture;
+                        mesh.material.needsUpdate = true;
+                        break;
+                    case textureType == "bump":
+                        mesh.material.bumpMap = loadedTexture;
+                        mesh.material.needsUpdate = true;
+                        break;
+                    // Add more cases here for other texture types
+                    default:
+                        console.log("no case for this texture type to be applied")
+                        break;
+                }
+            }
+        });
+    });
+
+    return button;
+}
+
+// const mesh = new THREE.Mesh(new THREE.SphereGeometry, new THREE.MeshPhysicalMaterial({ color: 'white' }))
+// mesh.material.bumpMap = textureLoader.load('textures/bumps/0.png')
+// scene.add(mesh)
+
+
+for (let i = 0; i < 8; i++) {
+    const matcapButton = CreateTextureButtonAndEventListener("matcap", i);
+    matcaps_panel.appendChild(matcapButton);
+
+    const normalButton = CreateTextureButtonAndEventListener("normal", i);
+    normals_panel.appendChild(normalButton);
+}
+
+for (let i = 0; i < 2; i++) {
+    const bumpButton = CreateTextureButtonAndEventListener("bump", i);
+    bumps_panel.appendChild(bumpButton);
+}
+
+
+// HDRIS: Can't add it above because it uses a different loader and different extension.
+for (let i = 0; i < 4; i++) {
+    const hdri = document.createElement("div");
+    hdri.id = `hdri-${i}`;
+    hdri.classList.add("panel-texture_hdris-hdri");
+
+    hdris_panel.appendChild(hdri);
+
+    const Loaded_Hdri = hdriLoader.load(
+        `./textures/hdris/${i}.hdr`,
+        () => {
+            Loaded_Hdri.mapping = THREE.EquirectangularReflectionMapping;
+        }
+    );
+
+    Loaded_Hdris.push(Loaded_Hdri);
+
+    hdri.addEventListener("click", () => {
+        for (let i = 0; i < Loaded_Hdris.length; i++) {
+            Loaded_Hdris[i].dispose()
+        }
+
+        for (const mesh of Selected_Meshes) {
+            if (mesh !== null) {
+                mesh.material.envMap = Loaded_Hdri;
+                mesh.material.needsUpdate = true;
+            }
+        }
+    })
+}
+
 
 /// Materials
 
@@ -843,13 +852,13 @@ radios.forEach((radio) => {
             if (Selected_Meshes) {
                 for (const mesh of Selected_Meshes) {
                     if (mesh !== null) {
-                        if (properties[property] === properties.toneMapping || properties[property] === properties.shadowTypes){
-                            if (properties[property] === properties.toneMapping){
-                                renderer.toneMapping = properties[property][entry[1]]; 
-                            }else{
-                                renderer.shadowMap = properties[property][entry[1]]; 
+                        if (properties[property] === properties.toneMapping || properties[property] === properties.shadowTypes) {
+                            if (properties[property] === properties.toneMapping) {
+                                renderer.toneMapping = properties[property][entry[1]];
+                            } else {
+                                renderer.shadowMap = properties[property][entry[1]];
                             }
-                        }else{
+                        } else {
                             mesh.material[property] = properties[property][entry[1]];
                             mesh.material.needsUpdate = true;
                         }
@@ -907,87 +916,87 @@ const cb_dithering = document.getElementById("cb-dithering")
 const cb_shadowcast = document.getElementById("cb-shadowcast")
 const cb_shadowreceive = document.getElementById("cb-shadowreceive")
 
-function checkbox_the_meshes() {
+function Checkbox_Meshes() {
     cb_wireframe.onclick = () => {
         for (const mesh of Selected_Meshes) {
-            if(mesh !== null){
+            if (mesh !== null) {
                 mesh.material.wireframe = cb_wireframe.value;
             }
         }
     };
     cb_visible.onclick = () => {
         for (const mesh of Selected_Meshes) {
-            if(mesh !== null){
+            if (mesh !== null) {
                 mesh.material.visible = !cb_visible.value;
             }
         }
     };
     cb_transparent.onclick = () => {
         for (const mesh of Selected_Meshes) {
-            if(mesh !== null){
+            if (mesh !== null) {
                 mesh.material.transparent = cb_transparent.value;
             }
         }
     };
     cb_fog.onclick = () => {
         for (const mesh of Selected_Meshes) {
-            if(mesh !== null){
+            if (mesh !== null) {
                 mesh.material.fog = cb_fog.value;
             }
         }
     };
     cb_alphahash.onclick = () => {
         for (const mesh of Selected_Meshes) {
-            if(mesh !== null){
+            if (mesh !== null) {
                 mesh.material.alphahash = cb_alphahash.value;
             }
         }
     };
     cb_clipshadows.onclick = () => {
         for (const mesh of Selected_Meshes) {
-            if(mesh !== null){
+            if (mesh !== null) {
                 mesh.material.clipShadows = cb_clipshadows.value;
             }
         }
     };
     cb_depthtest.onclick = () => {
         for (const mesh of Selected_Meshes) {
-            if(mesh !== null){
+            if (mesh !== null) {
                 mesh.material.depthTest = !cb_depthtest.value;
             }
         }
     };
     cb_depthwrite.onclick = () => {
         for (const mesh of Selected_Meshes) {
-            if(mesh !== null){
+            if (mesh !== null) {
                 mesh.material.depthWrite = !cb_depthwrite.value;
             }
         }
     };
     cb_permultialpha.onclick = () => {
         for (const mesh of Selected_Meshes) {
-            if(mesh !== null){
+            if (mesh !== null) {
                 mesh.material.premultipliedAlpha = cb_permultialpha.value;
             }
         }
     };
     cb_dithering.onclick = () => {
         for (const mesh of Selected_Meshes) {
-            if(mesh !== null){
+            if (mesh !== null) {
                 mesh.material.dithering = cb_dithering.value;
             }
         }
     };
     cb_shadowcast.onclick = () => {
         for (const mesh of Selected_Meshes) {
-            if(mesh !== null){
+            if (mesh !== null) {
                 mesh.castShadow = cb_shadowcast.value;
             }
         }
     };
     cb_shadowreceive.onclick = () => {
         for (const mesh of Selected_Meshes) {
-            if(mesh !== null){
+            if (mesh !== null) {
                 mesh.receiveShadow = cb_shadowreceive.value;
             }
         }
@@ -1074,9 +1083,38 @@ const sliderHandlers = {
             mesh.material.needsUpdate = true;
         }
     },
+
+    // Geometry Transformations do Not Work
+    "sldr_radius": (mesh, value) => {
+        if (mesh !== null) {
+            const newGeometry = mesh.geometry.clone();
+            newGeometry.parameters.radius = +value;
+            mesh.geometry = newGeometry;
+            sldr_radius_value.value = value;
+            mesh.geometry.needsUpdate = true;
+            mesh.updateMatrix();
+        }
+    },
+    "sldr_length": (mesh, value) => {
+        if (mesh !== null) {
+            const newGeometry = mesh.geometry.clone();
+            newGeometry.parameters.length = +value;
+            mesh.geometry = newGeometry;
+            sldr_length_value.value = value;
+            mesh.geometry.needsUpdate = true;
+        }
+    },
+    "sldr_segments": (mesh, value) => {
+        if (mesh !== null) {
+            console.log(mesh.geometry)
+            mesh.geometry.parameters.radialSegments = +value;
+            sldr_segments_value.value = value;
+            mesh.geometry.needsUpdate = true;
+        }
+    },
 };
 
-function slider_the_meshes() {
+function Slider_Meshes() {
     const sliderInputs = Array.from(document.querySelectorAll("input.panel-material_slider-input"));
     for (const sliderInput of sliderInputs) {
         sliderInput.oninput = () => {
@@ -1087,6 +1125,7 @@ function slider_the_meshes() {
         };
     }
 }
+
 
 /// info panel
 
@@ -1110,7 +1149,7 @@ const tick = () => {
     controls.update()
 
     // Render
-    if(scene){
+    if (scene) {
         renderer.render(scene, camera)
     }
 

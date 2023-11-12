@@ -1,123 +1,117 @@
-# Unused but Need
 
-<div class="panel-geometry_shapes-container">
+# LOW POLY LABORATORY
 
-                        <button class="panel-geometry_shapes-button">Shape #1</button>
-                        <div class="panel-geometry_shapes-panel">
-
-                            <!-- Position Coordinates -->
-                            <button class="panel-geometry_shapes-panel-dropdown">Position</button>
-                            <div class="panel-geometry_shapes-panel-sliders">
-                                <div class="panel-geometry_shapes-panel-sliders-container">
-                                    <div class="panel-geometry_shapes-panel-sliders-slider">
-                                        <label>x: </label>
-                                        <div class="slider">
-                                            <input type="range">
-                                            <p>12</p>
-                                        </div>
-                                    </div>
-                                    <div class="panel-geometry_shapes-panel-sliders-slider">
-                                        <label>y: </label>
-                                        <div class="slider">
-                                            <input type="range">
-                                            <p>2</p>
-                                        </div>
-                                    </div>
-                                    <div class="panel-geometry_shapes-panel-sliders-slider">
-                                        <label>z: </label>
-                                        <div class="slider">
-                                            <input type="range">
-                                            <p>0</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Scale Coordinates -->
-                            <button class="panel-geometry_shapes-panel-dropdown">Scale</button>
-                            <div class="panel-geometry_shapes-panel-sliders">
-                                <div class="panel-geometry_shapes-panel-sliders-container">
-                                    <div class="panel-geometry_shapes-panel-sliders-slider">
-                                        <label>x: </label>
-                                        <div class="slider">
-                                            <input type="range">
-                                            <p>12</p>
-                                        </div>
-                                    </div>
-                                    <div class="panel-geometry_shapes-panel-sliders-slider">
-                                        <label>y: </label>
-                                        <div class="slider">
-                                            <input type="range">
-                                            <p>2</p>
-                                        </div>
-                                    </div>
-                                    <div class="panel-geometry_shapes-panel-sliders-slider">
-                                        <label>z: </label>
-                                        <div class="slider">
-                                            <input type="range">
-                                            <p>0</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Position Coordinates -->
-                            <button class="panel-geometry_shapes-panel-dropdown">Rotation</button>
-                            <div class="panel-geometry_shapes-panel-sliders">
-                                <div class="panel-geometry_shapes-panel-sliders-container">
-                                    <div class="panel-geometry_shapes-panel-sliders-slider">
-                                        <label>x: </label>
-                                        <div class="slider">
-                                            <input type="range">
-                                            <p>12</p>
-                                        </div>
-                                    </div>
-                                    <div class="panel-geometry_shapes-panel-sliders-slider">
-                                        <label>y: </label>
-                                        <div class="slider">
-                                            <input type="range">
-                                            <p>2</p>
-                                        </div>
-                                    </div>
-                                    <div class="panel-geometry_shapes-panel-sliders-slider">
-                                        <label>z: </label>
-                                        <div class="slider">
-                                            <input type="range">
-                                            <p>0</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+A **threejs**-Powered **3d modeling** website written entirely in Vanilla JS.
 
 
 
-<!-- First Stupid Attempt -->
+## Acknowledgements
+
+ - [BRUNO SIMON](https://threejs-journey.com/)
+ - [CLEAN CODE](https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882)
+ - [FIGMA PROTOTYPING](https://www.amazon.com/Designing-Prototyping-Interfaces-Figma-interactive/dp/180056418X)
+ 
+## Requirements:
+
+- "three": "^0.153.0"
+- "sass": "^1.69.5",
+- "@melloware/coloris": "^0.21.1",
+
+## Authors
+
+- [Aboussabr Saad](https://www.github.com/Ssenseii)
 
 
-// const sliderx = document.getElementById("slider-0-position-x")
-// const slidery = document.getElementById("slider-0-position-y")
-// const sliderz = document.getElementById("slider-0-position-z")
-// const slider_value_x = document.getElementById("slider-0-position-x-value")
-// const slider_value_y = document.getElementById("slider-0-position-y-value")
-// const slider_value_z = document.getElementById("slider-0-position-z-value")
+## Demo
 
-//     if (sliderx) {
-//         sliderx.oninput = () => {
-//             scene_meshes[0].position.x = sliderx.value
-//             slider_value_x.innerText = sliderx.value
-//         }
-//     }
-//     if (slidery) {
-//         slidery.oninput = () => {
-//             scene_meshes[0].position.y = slidery.value
-//             slider_value_y.innerText = slidery.value
-//         }
-//     }
-//     if (sliderz) {
-//         sliderz.oninput = () => {
-//             scene_meshes[0].position.z = sliderz.value
-//             slider_value_z.innerText = sliderz.value
-//         }
-//     }
+[LOW POLY LABORATORY](https://www.youtube.com/)
+
+
+## Features
+
+- Light/dark mode toggle
+- ~~Autosave~~ (size issues)
+- Fullscreen mode
+- Cross platform
+- Creating and Editing 3D models
+- Applying Transformations to 3d Models
+- Constants Manipulations
+- Supports HDRIS, Matcaps, Normals and more...
+- Optimized for minimum triangles (low poly)
+- Lights support
+- Orthographic and Perspective Camera Support
+- Multiple Export Settings for your threejs projects
+- Scalable for next versions of threejs (you can always add more)
+- Minified Assets (under 1k)
+
+### In developement: 
+
+- 3D Gizmo for properties (scale, position and rotate)
+- Editor Settings (file - edit - view)
+- Texture Drop-zone (add your own texture)  
+- Electron - Typescript version
+- Animation support
+- Shader Support
+- Cloning Shapes
+- Console Manipulations
+
+
+## Lessons Learned
+
+**Programming: **
+
+- Object Oriented Programming vs Functional Programming
+- Python (bulk-renaming)
+- **Optimizations**
+- ThreeJS hidden Constants
+- Limitations of Local Storage
+- Project Management (deadlines)
+- DOM manipulations
+- JSON manipulations
+- Software Developement Concepts (architectures)
+- Graphics manipulations
+- How to detect and handle bugs
+- **Unit Testing** 
+
+
+**Design:**
+- SCRUM
+- DX and UX
+- Designing under spacial constraints
+- Lo-Fi & Hi-Fi design
+- Agile Web Development
+- Setting Rules before beginning
+
+
+**Personal:**
+- Handeling concurrent problems
+- Time Management with Big Projects
+- Researching and working with unknown utilities
+- Reading code
+- That I should read more on software developement
+
+## FAQ
+
+#### Why Create this?
+
+Sometimes I want to create low poly models for my websites and using dat.gui, while extremely accessible and fun, is hard to set up for more than one shape.
+
+My editor is fast to set up. It exports directly to human-readable code (as well as other formats) that you can copy-paste on your own projects and have them working perfectly.
+
+Also it was a very fun challenge, and I wanted to understand more of threejs's secrets 
+
+#### What is it?
+
+Well in my mind, it's like an open-source 3D modeling  software but for threejs's pre-built shapes. It applies every known material and geometry transformation on the shapes and seperates them so that you can work on each one independantly, or more than one at a time !!!
+
+- It's built for scalabality, so I'm always adding more.
+- It's easy to use 
+- Best for Low Poly Models though it has features for glass, metal, plastic, and light reflections...
+- almost no memory limitations (fps drops after 281 shapes) 
+
+#### What isn't it?
+
+- It's not a perfect replacement for threejs's editor
+- it's not set up for mobile devices.
+- no dev tools, no sfx editor, no animations editor.
+- minimal prior knowledge in threejs is needed to operate it  

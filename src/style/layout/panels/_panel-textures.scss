@@ -14,7 +14,8 @@
     }
 
     &_matcaps,
-    &_normals, 
+    &_normals,
+    &_bumps, 
     &_hdris {
         
         border-radius: 8px;
@@ -32,7 +33,7 @@
         margin-bottom: 0.4vw;
 
 
-        &-matcap, &-normal, &-hdri {
+        &-matcap, &-normal, &-hdri, &-bump {
             cursor: pointer;
             height: 1.5vw;
             width: 1.5vw;

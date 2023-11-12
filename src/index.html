@@ -4,11 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <title>Low Poly Laboratory | 3D Editor For Threejs</title>
+
     <link rel="stylesheet" href="style/style.scss">
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+    <link rel="icon" type="image/png" href="/assets/images/favicon.png">
 </head>
 
 <body>
+    <div id="loading-screen">
+        <h1 id="title">LOW POLY LABORATORY</h1>
+        <p>alpha 0.1</p>
+        <div id="loader"></div>
+    </div>
     <main class="editor">
 
         <!-- Top Section -->
@@ -400,6 +409,46 @@
                             <input class="panel-material_slider-value" type="text" value="0.0" id="sldr_thickness_value">
                         </div>
                     </div>
+                    <div class="panel-material_sliders-slider">
+                        <label>Radius: </label>
+                        <div class="slider">
+                            <input id="sldr_radius" 
+                            class="panel-material_slider-input" 
+                            min="1.0" 
+                            max="10.0"
+                            step="0.01" 
+                            value="1.0" 
+                            type="range">
+                            <input class="panel-material_slider-value" type="text" value="1.0" id="sldr_radius_value">
+                        </div>
+                    </div>
+                    <div class="panel-material_sliders-slider">
+                        <label>Length: </label>
+                        <div class="slider">
+                            <input id="sldr_length" 
+                            class="panel-material_slider-input" 
+                            min="1.0" 
+                            max="10.0"
+                            step="0.01" 
+                            value="1.0" 
+                            type="range">
+                            <input class="panel-material_slider-value" type="text" value="1.0" id="sldr_length_value">
+                        </div>
+                    </div>
+                    <div class="panel-material_sliders-slider">
+                        <label>Segments: </label>
+                        <div class="slider">
+                            <input id="sldr_segments" 
+                            class="panel-material_slider-input" 
+                            min="1.0" 
+                            max="40.0"
+                            step="1.0" 
+                            value="32.0" 
+                            type="range">
+                            <input class="panel-material_slider-value" type="text" value="32.0" id="sldr_segments_value">
+                        </div>
+                    </div>
+                    
                 
                 </div>
 
@@ -535,6 +584,8 @@
                 <div id="matcaps-panel" class="panel-texture_matcaps"></div>
                 <h2>Normals:</h2>
                 <div id="normals-panel" class="panel-texture_normals"></div>
+                <h2>Bumps:</h2>
+                <div id="bumps-panel" class="panel-texture_bumps"></div>
                 <h2>HDRIS:</h2>
                 <div id="hdris-panel" class="panel-texture_hdris"></div>
             </div>
@@ -566,8 +617,6 @@
             const panel = document.getElementById(`panel-${index}-${attribute}`);
             panel.classList.toggle("hide");
         }
-
-
     </script>
 </body>
 
