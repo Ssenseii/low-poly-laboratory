@@ -81,18 +81,17 @@ const ObjectLoader = new THREE.ObjectLoader()
 
 /// Loading screen:
 
-/* JavaScript */
-// document.addEventListener("DOMContentLoaded", function () {
-//     // Show the loading screen
-    
-//     document.getElementById("loading-screen").style.display = "grid";
+document.addEventListener("DOMContentLoaded", function () {
+    // Show the loading screen
 
-//     // Wait for all scripts and assets to load
-//     window.addEventListener("load", function () {
-//         // Hide the loading screen
-//         document.getElementById("loading-screen").style.display = "none";
-//     });
-// });
+    document.getElementById("loading-screen").style.display = "grid";
+
+    // Wait for all scripts and assets to load
+    window.addEventListener("load", function () {
+        // Hide the loading screen
+        document.getElementById("loading-screen").style.display = "none";
+    });
+});
 
 /// Theme
 
@@ -113,7 +112,7 @@ Theme_Toggle.addEventListener("click", () => {
 
     // Set the CSS variables
     document.documentElement.style.setProperty("--primary", defaultTheme ? "#25202d" : "#D6DaD1");
-    document.documentElement.style.setProperty("--secondary", defaultTheme ? "#D6DAD1" : "#25202d" );
+    document.documentElement.style.setProperty("--secondary", defaultTheme ? "#D6DAD1" : "#25202d");
 });
 
 

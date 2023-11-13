@@ -115,3 +115,14 @@ Well, it's like an open-source 3D modeling  software but for threejs's pre-built
 - it's not set up for mobile devices.
 - no dev tools, no sfx editor, no animations editor.
 - minimal prior knowledge in threejs is needed to operate it  
+
+
+## Screenshots
+
+![Lollipop](https://i.ibb.co/p2sbBrh/Lollipop.png")
+
+![Perry Platypus](https://i.ibb.co/FVtj1g8/perry-platipus.png")
+
+![Glassified Donut](https://i.ibb.co/Qd4vp5V/Spacial-Donut.png")
+
+![Perfume Bottle](https://i.ibb.co/c3mT9MH/perfume-bottle.png")

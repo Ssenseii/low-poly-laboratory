@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <title>Low Poly Laboratory | 3D Editor For Threejs</title>
 
     <link rel="stylesheet" href="style/style.scss">
@@ -13,14 +13,14 @@
 </head>
 
 <body>
-    
+
     <!-- Loading Screen: When working, remove this and its js code -->
-<!--     
+
     <div id="loading-screen">
         <h1 id="title">LOW POLY LABORATORY</h1>
         <p>alpha 0.1</p>
         <div id="loader"></div>
-    </div> -->
+    </div>
 
 
     <main class="editor">
@@ -47,14 +47,15 @@
                         </path>
                     </svg>
                     <!-- load -->
-                    
+
                     <svg id="load" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                         <path d="M11 15h2V9h3l-4-5-4 5h3z"></path>
                         <path d="M20 18H4v-7H2v7c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2v-7h-2v7z"></path>
                     </svg>
-                    
+
                     <!-- theme -->
-                    <svg id="theme-toggle" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <svg id="theme-toggle" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                        viewBox="0 0 24 24">
                         <path
                             d="M6.993 12c0 2.761 2.246 5.007 5.007 5.007s5.007-2.246 5.007-5.007S14.761 6.993 12 6.993 6.993 9.239 6.993 12zM12 8.993c1.658 0 3.007 1.349 3.007 3.007S13.658 15.007 12 15.007 8.993 13.658 8.993 12 10.342 8.993 12 8.993zM10.998 19h2v3h-2zm0-17h2v3h-2zm-9 9h3v2h-3zm17 0h3v2h-3zM4.219 18.363l2.12-2.122 1.415 1.414-2.12 2.122zM16.24 6.344l2.122-2.122 1.414 1.414-2.122 2.122zM6.342 7.759 4.22 5.637l1.415-1.414 2.12 2.122zm13.434 10.605-1.414 1.414-2.122-2.122 1.414-1.414z">
                         </path>
@@ -105,11 +106,11 @@
                                 <label>FrontSide</label>
                             </div>
                             <div class="panel-material_radios-option-radio" class="radio">
-                                <input name="side" value="2" type="radio" >
+                                <input name="side" value="2" type="radio">
                                 <label>Backside</label>
                             </div>
                             <div class="panel-material_radios-option-radio" class="radio">
-                                <input name="side" value="3" type="radio" >
+                                <input name="side" value="3" type="radio">
                                 <label>Doubleside</label>
                             </div>
                         </fieldset>
@@ -124,15 +125,15 @@
                                 <label>Normal</label>
                             </div>
                             <div class="panel-material_radios-option-radio" class="radio">
-                                <input name="blending" value="2" type="radio" >
+                                <input name="blending" value="2" type="radio">
                                 <label>Additive</label>
                             </div>
                             <div class="panel-material_radios-option-radio" class="radio">
-                                <input name="blending" value="3" type="radio" >
+                                <input name="blending" value="3" type="radio">
                                 <label>Subtractive</label>
                             </div>
                             <div class="panel-material_radios-option-radio" class="radio">
-                                <input name="blending" value="4" type="radio" >
+                                <input name="blending" value="4" type="radio">
                                 <label>Multiply</label>
                             </div>
                         </fieldset>
@@ -147,20 +148,20 @@
                                 <label>Null</label>
                             </div>
                             <div class="panel-material_radios-option-radio" class="radio">
-                                <input name="precision" value="2" type="radio" >
+                                <input name="precision" value="2" type="radio">
                                 <label>lowp</label>
                             </div>
                             <div class="panel-material_radios-option-radio" class="radio">
-                                <input name="precision" value="3" type="radio" >
+                                <input name="precision" value="3" type="radio">
                                 <label>mediump</label>
                             </div>
                             <div class="panel-material_radios-option-radio" class="radio">
-                                <input name="precision" value="4" type="radio" >
+                                <input name="precision" value="4" type="radio">
                                 <label>highp</label>
                             </div>
                         </fieldset>
                     </form>
-                    
+
                     <!-- Radio Panel -->
                     <form id="radio-shadowTypes" class="panel-material_radios-option">
                         <p>Shadow Types</p>
@@ -170,20 +171,20 @@
                                 <label>Basic</label>
                             </div>
                             <div class="panel-material_radios-option-radio" class="radio">
-                                <input name="shadowTypes" value="2" type="radio" >
+                                <input name="shadowTypes" value="2" type="radio">
                                 <label>PCF</label>
                             </div>
                             <div class="panel-material_radios-option-radio" class="radio">
-                                <input name="shadowTypes" value="3" type="radio" >
+                                <input name="shadowTypes" value="3" type="radio">
                                 <label>PCF Soft</label>
                             </div>
                             <div class="panel-material_radios-option-radio" class="radio">
-                                <input name="shadowTypes" value="4" type="radio" >
+                                <input name="shadowTypes" value="4" type="radio">
                                 <label>VSM</label>
                             </div>
                         </fieldset>
                     </form>
-                    
+
                     <!-- Radio Panel -->
                     <form id="radio-toneMapping" class="panel-material_radios-option">
                         <p>Tone Mapping</p>
@@ -193,19 +194,19 @@
                                 <label>None</label>
                             </div>
                             <div class="panel-material_radios-option-radio" class="radio">
-                                <input name="toneMapping" value="2" type="radio" >
+                                <input name="toneMapping" value="2" type="radio">
                                 <label>Linear</label>
                             </div>
                             <div class="panel-material_radios-option-radio" class="radio">
-                                <input name="toneMapping" value="3" type="radio" >
+                                <input name="toneMapping" value="3" type="radio">
                                 <label>Reinhardt</label>
                             </div>
                             <div class="panel-material_radios-option-radio" class="radio">
-                                <input name="toneMapping" value="4" type="radio" >
+                                <input name="toneMapping" value="4" type="radio">
                                 <label>Cineon</label>
                             </div>
                             <div class="panel-material_radios-option-radio" class="radio">
-                                <input name="toneMapping" value="5" type="radio" >
+                                <input name="toneMapping" value="5" type="radio">
                                 <label>Aces</label>
                             </div>
                         </fieldset>
@@ -281,13 +282,8 @@
                     <div class="panel-material_sliders-slider">
                         <label>Opacity: </label>
                         <div class="slider">
-                            <input id="sldr_opacity" 
-                            class="panel-material_slider-input" 
-                            min="0.0" 
-                            max="1.0"
-                            step="0.01" 
-                            value="1.0" 
-                            type="range">
+                            <input id="sldr_opacity" class="panel-material_slider-input" min="0.0" max="1.0" step="0.01"
+                                value="1.0" type="range">
                             <input class="panel-material_slider-value" type="text" value="1.0" id="sldr_opacity_value">
                         </div>
                     </div>
@@ -295,41 +291,27 @@
                     <div class="panel-material_sliders-slider">
                         <label>AlphaT: </label>
                         <div class="slider">
-                            <input id="sldr_alphatest" 
-                            class="panel-material_slider-input" 
-                            min="0.0" 
-                            max="1.0"
-                            step="0.01" 
-                            value="0.0" 
-                            type="range">
-                            <input class="panel-material_slider-value" type="text" value="0.0" id="sldr_alphatest_value">
+                            <input id="sldr_alphatest" class="panel-material_slider-input" min="0.0" max="1.0"
+                                step="0.01" value="0.0" type="range">
+                            <input class="panel-material_slider-value" type="text" value="0.0"
+                                id="sldr_alphatest_value">
                         </div>
                     </div>
 
                     <div class="panel-material_sliders-slider">
                         <label>ClrCoat: </label>
                         <div class="slider">
-                            <input id="sldr_clrcoat" 
-                            class="panel-material_slider-input" 
-                            min="0.0" 
-                            max="1.0"
-                            step="0.01" 
-                            value="0.0" 
-                            type="range">
+                            <input id="sldr_clrcoat" class="panel-material_slider-input" min="0.0" max="1.0" step="0.01"
+                                value="0.0" type="range">
                             <input class="panel-material_slider-value" type="text" value="0.0" id="sldr_clrcoat_value">
                         </div>
                     </div>
-                    
+
                     <div class="panel-material_sliders-slider">
                         <label>Ior: </label>
                         <div class="slider">
-                            <input id="sldr_ior" 
-                            class="panel-material_slider-input" 
-                            min="1.0" 
-                            max="2.33"
-                            step="0.01" 
-                            value="1.5" 
-                            type="range">
+                            <input id="sldr_ior" class="panel-material_slider-input" min="1.0" max="2.33" step="0.01"
+                                value="1.5" type="range">
                             <input class="panel-material_slider-value" type="text" value="1.5" id="sldr_ior_value">
                         </div>
                     </div>
@@ -337,27 +319,18 @@
                     <div class="panel-material_sliders-slider">
                         <label>reflect: </label>
                         <div class="slider">
-                            <input id="sldr_reflectivity" 
-                            class="panel-material_slider-input" 
-                            min="0.0" 
-                            max="1.0"
-                            step="0.01" 
-                            value="0.5" 
-                            type="range">
-                            <input class="panel-material_slider-value" type="text" value="1.5" id="sldr_reflectivity_value">
+                            <input id="sldr_reflectivity" class="panel-material_slider-input" min="0.0" max="1.0"
+                                step="0.01" value="0.5" type="range">
+                            <input class="panel-material_slider-value" type="text" value="1.5"
+                                id="sldr_reflectivity_value">
                         </div>
                     </div>
 
                     <div class="panel-material_sliders-slider">
                         <label>Metal: </label>
                         <div class="slider">
-                            <input id="sldr_metalness" 
-                            class="panel-material_slider-input" 
-                            min="0.0" 
-                            max="1.0"
-                            step="0.01" 
-                            value="0" 
-                            type="range">
+                            <input id="sldr_metalness" class="panel-material_slider-input" min="0.0" max="1.0"
+                                step="0.01" value="0" type="range">
                             <input class="panel-material_slider-value" type="text" value="0" id="sldr_metalness_value">
                         </div>
                     </div>
@@ -365,109 +338,73 @@
                     <div class="panel-material_sliders-slider">
                         <label>Rough: </label>
                         <div class="slider">
-                            <input id="sldr_roughness" 
-                            class="panel-material_slider-input" 
-                            min="0.0" 
-                            max="1.0"
-                            step="0.01" 
-                            value="1.0" 
-                            type="range">
-                            <input class="panel-material_slider-value" type="text" value="1.0" id="sldr_roughness_value">
+                            <input id="sldr_roughness" class="panel-material_slider-input" min="0.0" max="1.0"
+                                step="0.01" value="1.0" type="range">
+                            <input class="panel-material_slider-value" type="text" value="1.0"
+                                id="sldr_roughness_value">
                         </div>
                     </div>
                     <div class="panel-material_sliders-slider">
                         <label>irdsnc: </label>
                         <div class="slider">
-                            <input id="sldr_irds" 
-                            class="panel-material_slider-input" 
-                            min="0.0" 
-                            max="1.0"
-                            step="0.01" 
-                            value="0.0" 
-                            type="range">
+                            <input id="sldr_irds" class="panel-material_slider-input" min="0.0" max="1.0" step="0.01"
+                                value="0.0" type="range">
                             <input class="panel-material_slider-value" type="text" value="0.0" id="sldr_irds_value">
                         </div>
                     </div>
                     <div class="panel-material_sliders-slider">
                         <label>sheen: </label>
                         <div class="slider">
-                            <input id="sldr_sheen" 
-                            class="panel-material_slider-input" 
-                            min="0.0" 
-                            max="1.0"
-                            step="0.01" 
-                            value="0.0" 
-                            type="range">
+                            <input id="sldr_sheen" class="panel-material_slider-input" min="0.0" max="1.0" step="0.01"
+                                value="0.0" type="range">
                             <input class="panel-material_slider-value" type="text" value="0.0" id="sldr_sheen_value">
                         </div>
                     </div>
                     <div class="panel-material_sliders-slider">
                         <label>glassify: </label>
                         <div class="slider">
-                            <input id="sldr_transmission" 
-                            class="panel-material_slider-input" 
-                            min="0.0" 
-                            max="1.0"
-                            step="0.01" 
-                            value="0.0" 
-                            type="range">
-                            <input class="panel-material_slider-value" type="text" value="0.0" id="sldr_transmission_value">
+                            <input id="sldr_transmission" class="panel-material_slider-input" min="0.0" max="1.0"
+                                step="0.01" value="0.0" type="range">
+                            <input class="panel-material_slider-value" type="text" value="0.0"
+                                id="sldr_transmission_value">
                         </div>
                     </div>
                     <div class="panel-material_sliders-slider">
                         <label>Thick: </label>
                         <div class="slider">
-                            <input id="sldr_thickness" 
-                            class="panel-material_slider-input" 
-                            min="0.0" 
-                            max="5.0"
-                            step="0.01" 
-                            value="0.0" 
-                            type="range">
-                            <input class="panel-material_slider-value" type="text" value="0.0" id="sldr_thickness_value">
+                            <input id="sldr_thickness" class="panel-material_slider-input" min="0.0" max="5.0"
+                                step="0.01" value="0.0" type="range">
+                            <input class="panel-material_slider-value" type="text" value="0.0"
+                                id="sldr_thickness_value">
                         </div>
                     </div>
                     <div class="panel-material_sliders-slider">
                         <label>Radius: </label>
                         <div class="slider">
-                            <input id="sldr_radius" 
-                            class="panel-material_slider-input" 
-                            min="1.0" 
-                            max="10.0"
-                            step="0.01" 
-                            value="1.0" 
-                            type="range">
+                            <input id="sldr_radius" class="panel-material_slider-input" min="1.0" max="10.0" step="0.01"
+                                value="1.0" type="range">
                             <input class="panel-material_slider-value" type="text" value="1.0" id="sldr_radius_value">
                         </div>
                     </div>
                     <div class="panel-material_sliders-slider">
                         <label>Length: </label>
                         <div class="slider">
-                            <input id="sldr_length" 
-                            class="panel-material_slider-input" 
-                            min="1.0" 
-                            max="10.0"
-                            step="0.01" 
-                            value="1.0" 
-                            type="range">
+                            <input id="sldr_length" class="panel-material_slider-input" min="1.0" max="10.0" step="0.01"
+                                value="1.0" type="range">
                             <input class="panel-material_slider-value" type="text" value="1.0" id="sldr_length_value">
                         </div>
                     </div>
                     <div class="panel-material_sliders-slider">
                         <label>Segments: </label>
                         <div class="slider">
-                            <input id="sldr_segments" 
-                            class="panel-material_slider-input" 
-                            min="1.0" 
-                            max="40.0"
-                            step="1.0" 
-                            value="32.0" 
-                            type="range">
-                            <input class="panel-material_slider-value" type="text" value="32.0" id="sldr_segments_value">
+                            <input id="sldr_segments" class="panel-material_slider-input" min="1.0" max="40.0"
+                                step="1.0" value="32.0" type="range">
+                            <input class="panel-material_slider-value" type="text" value="32.0"
+                                id="sldr_segments_value">
                         </div>
                     </div>
-                    
-                
+
+
                 </div>
 
 
@@ -533,15 +470,15 @@
 
                 <div id="shapes_panel" class="panel-geometry_shapes"></div>
             </div>
-</div>
+        </div>
 
 
         <div class="row">
-            
+
             <!-- Camera -->
 
             <div class="panel panel-camera">
-                
+
                 <div class="panel-camera_radios">
                     <form id="radio-camera" class="panel-camera_radios-option">
                         <fieldset class="panel-camera_radios-option-container">
@@ -621,19 +558,17 @@
         </div>
     </main>
 
-    <!-- <script src="./core/Loading.js"></script> -->
-
     <script type="module" src="./script.js"></script>
-    
+
     <script>
         /// toggling the shapes
-        function toggleShape(index){
+        function toggleShape(index) {
             const panel = document.getElementById(`panel-${index}`);
             panel.classList.toggle("hide");
         }
         /// toggling the position, scale and rotation
 
-        function toggleSliders(index, attribute){
+        function toggleSliders(index, attribute) {
             const panel = document.getElementById(`panel-${index}-${attribute}`);
             panel.classList.toggle("hide");
         }
@@ -641,6 +576,3 @@
 </body>
 
 </html>
-
-
-
