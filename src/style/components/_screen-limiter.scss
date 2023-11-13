@@ -1,0 +1,46 @@
+.mobile-layout {
+    display: none;
+}
+
+/// For Mobile
+
+
+@media screen and (max-width: 1000px) {
+    .editor {
+        display: none;
+    }
+
+    .mobile-layout {
+        width: 100vw;
+        height: 100vh;
+        background-color: var(--primary);
+        color: var(--secondary);
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        h3 {
+            font-size: 4.2vw;
+            text-align: center;
+            width: 80vw;
+            margin-bottom: 4.2vh;
+
+            span {
+                color: var(--accent);
+            }
+        }
+
+        p {
+            font-size: 3vw;
+            text-align: center;
+            width: 66ch;
+            margin-bottom: var(--small);
+
+            span {
+                font-weight: bolder;
+            }
+        }
+    }
+}

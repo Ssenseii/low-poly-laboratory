@@ -133,7 +133,7 @@
             align-items: center;
 
             .checkbox {
-                @include Clickable;
+                @include Clickable-v2;
                 margin-right: var(--small);
             }
 

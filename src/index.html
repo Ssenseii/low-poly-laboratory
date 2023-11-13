@@ -558,21 +558,16 @@
         </div>
     </main>
 
+    <div class="mobile-layout">
+        <h3>Low <span>Poly</span> Laboratory is not supported on mobile devices under a certain width (for now)</h3>
+        <p>Consider using a screen <span>larger than 1024px</span> or <span>Landscape Mode</span></p>
+
+        <p>Have a great day and please visit us again !!</p>
+    </div>
+
     <script type="module" src="./script.js"></script>
+    <script src="./core/Toggles.js"></script>
 
-    <script>
-        /// toggling the shapes
-        function toggleShape(index) {
-            const panel = document.getElementById(`panel-${index}`);
-            panel.classList.toggle("hide");
-        }
-        /// toggling the position, scale and rotation
-
-        function toggleSliders(index, attribute) {
-            const panel = document.getElementById(`panel-${index}-${attribute}`);
-            panel.classList.toggle("hide");
-        }
-    </script>
 </body>
 
 </html>
