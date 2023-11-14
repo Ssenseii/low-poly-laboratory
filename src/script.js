@@ -644,7 +644,6 @@ renderer.shadowMap.enabled = true
 
 
 function Create_Texture_Button(type, index) {
-    console.log("creating texture button")
     const texture = document.createElement("div");
     texture.id = `${type}-${index}`;
     texture.classList.add(`panel-texture_${type}s-${type}`);

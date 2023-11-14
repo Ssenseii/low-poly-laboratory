@@ -3,8 +3,11 @@
 const loading_item = document.getElementById("loading-item")
 
 document.addEventListener("DOMContentLoaded", function () {
-        // Hide the loading screen
-        document.getElementById("loading-screen").style.display = "none";
+    // Hide the loading screen
+
+        setTimeout(() => {
+            document.getElementById("loading-screen").style.display = "none";
+        }, 3000);
         // document.getElementById("loading-screen").style.display = "grid";
 });
 
