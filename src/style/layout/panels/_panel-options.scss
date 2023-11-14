@@ -19,6 +19,7 @@ overflow: hidden;
             margin-bottom: var(--small);
 
             label {
+                font-family: var(--fnt-global);
                 font-size: 0.8vw;
                 font-weight: bold;
                 margin-right: var(--small);
@@ -38,11 +39,12 @@ overflow: hidden;
         }
 
         &-delete {
-            @include Clickable;
+            @include Clickable-v2;
             width: 80%;
             border-radius: var(--small);
             border: none;
             height: 1.8vw;
+            font-family: var(--fnt-global);
             font-size: var(--medium);
             background-color: var(--danger-action);
             color: var(--secondary);
@@ -54,11 +56,13 @@ overflow: hidden;
         height: 10vh;
 
         p {
+            font-family: var(--fnt-global);
             font-size: var(--large);
             font-weight: bold;
             margin-right: var(--small);
 
             span{
+                font-family: var(--fnt-global);
                 font-size: var(--large);
                 font-weight: normal;
                 margin-left: 1vw;

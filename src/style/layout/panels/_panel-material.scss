@@ -26,6 +26,7 @@
         width: 100%;
         background: linear-gradient(to left, var(--color-picked) 20%, #ffffff);
 
+        font-family: var(--fnt-global);
         font-size: var(--xlarge);
         text-transform: uppercase;
         font-weight: bolder;
@@ -46,6 +47,7 @@
 
         overflow: scroll;
 
+        font-family: var(--fnt-global);
         font-size: var(--large);
 
         margin-bottom: 0.8vh;
@@ -68,6 +70,7 @@
             overflow: hidden;
 
             p {
+                font-family: var(--fnt-global);
                 font-weight: bolder;
                 text-align: center;
                 margin-bottom: var(--small);
@@ -104,6 +107,7 @@
 
                 label {
                     text-transform: uppercase;
+                    font-family: var(--fnt-global);
                     font-size: var(--medium);
                 }
             }
@@ -121,6 +125,7 @@
 
         overflow: scroll;
 
+        font-family: var(--fnt-global);
         font-size: var(--large);
 
         margin-bottom: 0.8vh;
@@ -138,6 +143,7 @@
             }
 
             label {
+                font-family: var(--fnt-global);
                 font-size: var(--medium);
                 font-weight: 700;
                 color: var(--primary);
@@ -164,6 +170,7 @@
             padding-inline: var(--small);
 
             label {
+                font-family: var(--fnt-global);
                 font-size: var(--medium);
                 font-weight: 700;
                 margin-right: var(--medium);
@@ -180,6 +187,7 @@
 
             .panel-material_slider-value {
                 margin-top: 0.4vh;
+                font-family: var(--fnt-global);
                 font-size: var(--medium);
                 font-weight: 700;
                 width: 1.6vw;

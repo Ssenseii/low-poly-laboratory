@@ -21,10 +21,14 @@
       align-items: center;
       gap: var(--small);
 
+      
       select {
         cursor: pointer;
         @include ddw-normal;
         accent-color: var(--accent);
+
+        font-family: var(--fnt-global);
+        font-size: var(--medium);
       }
     }
 
@@ -42,6 +46,10 @@
 
         background-color: var(--accent);
         color: var(--secondary);
+
+        font-family: var(--fnt-global);
+        font-size: var(--large);
+        font-weight: bolder;
       }
     }
 
@@ -102,6 +110,7 @@
         color: var(--secondary);
 
         text-align: left;
+        font-family: var(--fnt-global);
         font-weight: 700;
 
         width: 80%;
@@ -125,6 +134,7 @@
           margin-bottom: var(--small);
 
           label {
+            font-family: var(--fnt-global);
             font-size: var(--large);
             margin-right: 1rem;
           }
@@ -137,6 +147,7 @@
 
           input {
             width: 1.8vw;
+            font-family: var(--fnt-global);
             font-size: var(--medium);
             background: transparent;
             border: none;

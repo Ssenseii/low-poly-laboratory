@@ -70,8 +70,8 @@ let shape;
 
 
 /// LOADERS
-const textureLoader = new THREE.TextureLoader();
-const hdriLoader = new RGBELoader();
+export const textureLoader = new THREE.TextureLoader();
+export const hdriLoader = new RGBELoader();
 const ObjectLoader = new THREE.ObjectLoader()
 
 
@@ -79,19 +79,6 @@ const ObjectLoader = new THREE.ObjectLoader()
 
 
 
-/// Loading screen:
-
-document.addEventListener("DOMContentLoaded", function () {
-    // Show the loading screen
-
-    document.getElementById("loading-screen").style.display = "grid";
-
-    // Wait for all scripts and assets to load
-    window.addEventListener("load", function () {
-        // Hide the loading screen
-        document.getElementById("loading-screen").style.display = "none";
-    });
-});
 
 /// Theme
 
@@ -657,6 +644,7 @@ renderer.shadowMap.enabled = true
 
 
 function Create_Texture_Button(type, index) {
+    console.log("creating texture button")
     const texture = document.createElement("div");
     texture.id = `${type}-${index}`;
     texture.classList.add(`panel-texture_${type}s-${type}`);
@@ -747,14 +735,19 @@ for (let i = 0; i < 8; i++) {
     normals_panel.appendChild(normalButton);
 }
 
-for (let i = 0; i < 2; i++) {
+for (let i = 0; i < 3; i++) {
     const bumpButton = CreateTextureButtonAndEventListener("bump", i);
     bumps_panel.appendChild(bumpButton);
 }
 
 
 // HDRIS: Can't add it above because it uses a different loader and different extension.
+/// We're also Lazy Loading them for their big size
+
+
 for (let i = 0; i < 4; i++) {
+
+    
     const hdri = document.createElement("div");
     hdri.id = `hdri-${i}`;
     hdri.classList.add("panel-texture_hdris-hdri");

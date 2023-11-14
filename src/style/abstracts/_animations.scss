@@ -1,9 +1,13 @@
 @keyframes Loading{
     from{
-        width: 0%;
+        transform: scale(0.5);
     }
 
+    50%{
+        transform: scale(1);
+    }
+    
     to{
-        width: 80%;
+        transform: scale(0.5);
     }
 }

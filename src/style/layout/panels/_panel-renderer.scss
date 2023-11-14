@@ -7,11 +7,13 @@
         height: 100%;
         
         h2{
+            font-family: var(--fnt-global);
             font-size: var(--medium);
             margin-bottom: var(--xsmall);
         }
 
         p{
+            font-family: var(--fnt-global);
             font-size: var(--medium);
             text-indent: var(--large);
 

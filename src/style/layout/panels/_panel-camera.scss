@@ -1,37 +1,38 @@
-.panel-camera{
+.panel-camera {
     overflow: hidden;
 
     padding: var(--small);
     color: var(--secondary);
 
-    &_radios{
+    &_radios {
         border: 1px solid var(--secondary);
         padding: var(--small);
         border-radius: var(--small);
         margin-bottom: var(--small);
 
-        &-option{
+        &-option {
 
-            fieldset{
+            fieldset {
                 border: none;
             }
 
-            &-radio{
+            &-radio {
                 display: flex;
                 flex-direction: row;
                 align-items: center;
 
-                input{
+                input {
                     margin-right: var(--small);
                 }
 
-                label{
+                label {
+                    font-family: var(--fnt-global);
                     font-size: var(--medium);
                     text-transform: uppercase;
-                    
+
                 }
 
-                &:nth-child(1){
+                &:nth-child(1) {
                     margin-bottom: var(--small);
                 }
             }
@@ -40,7 +41,7 @@
     }
 
 
-    &_presets{
+    &_presets {
         @include Inner_Wrapper;
 
         display: flex;
@@ -50,8 +51,8 @@
 
         padding: var(--small);
 
-        &-preset{
-            @include Clickable;
+        &-preset {
+            @include Clickable-v2;
             margin-bottom: var(--small);
 
             background-color: var(--primary);
@@ -61,13 +62,14 @@
             border-radius: var(--xsmall);
 
             box-shadow: none;
+            font-family: var(--fnt-global);
             font-size: var(--medium);
             font-weight: bolder;
 
             border: none;
 
 
-            &:nth-child(3){
+            &:nth-child(3) {
                 margin-bottom: 0;
             }
         }
