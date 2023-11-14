@@ -13,7 +13,35 @@ import "@melloware/coloris/dist/coloris.css";
 import Coloris from "@melloware/coloris";
 
 
+// CONSTANTS
 
+import {
+    scene_meshes,
+    Loaded_Matcaps,
+    Loaded_Normals,
+    Loaded_Bumps,
+    Loaded_Hdris,
+    canvas_wrapper,
+    canvas,
+    matcaps_panel,
+    normals_panel,
+    bumps_panel,
+    hdris_panel,
+    Shapes_Selector,
+    Materials_Selector,
+    Create_Mesh,
+    Shapes_Panel,
+    save,
+    load,
+    textureLoader,
+    ObjectLoader,
+    hdriLoader
+} from './core/Constants';
+
+
+/// UTILS
+
+import { Iterate_Over } from './core/Utils';
 
 
 
@@ -22,41 +50,7 @@ import Coloris from "@melloware/coloris";
     Base
 */
 
-/// CONSTANTS
 
-
-/// Texture Arrays
-const scene_meshes = [];   /// Main Array
-const Loaded_Matcaps = [];
-const Loaded_Normals = [];
-const Loaded_Bumps = [];
-const Loaded_Hdris = [];
-
-
-
-// canvas 
-const canvas_wrapper = document.querySelector('div.panel-canvas')
-const canvas = document.querySelector('canvas.webgl')
-
-
-// Panel: Textures
-const matcaps_panel = document.getElementById("matcaps-panel");
-const normals_panel = document.getElementById("normals-panel");
-const bumps_panel = document.getElementById("bumps-panel");
-const hdris_panel = document.getElementById("hdris-panel")
-
-
-// Panel: Geometry
-const Shapes_Selector = document.getElementById("shapes");
-const Materials_Selector = document.getElementById("materials");
-const Create_Mesh = document.getElementById("generator");
-const Shapes_Panel = document.getElementById("shapes_panel");
-
-
-
-// Saving Buttons
-const save = document.getElementById("save");
-const load = document.getElementById("load");
 
 
 /// VARIABLES
@@ -70,9 +64,6 @@ let shape;
 
 
 /// LOADERS
-export const textureLoader = new THREE.TextureLoader();
-export const hdriLoader = new RGBELoader();
-const ObjectLoader = new THREE.ObjectLoader()
 
 
 
@@ -80,27 +71,7 @@ const ObjectLoader = new THREE.ObjectLoader()
 
 
 
-/// Theme
 
-const Theme_Toggle = document.getElementById("theme-toggle")
-
-Theme_Toggle.addEventListener("click", () => {
-    // Set the default theme
-    let defaultTheme = document.documentElement.classList.contains("light-theme");
-
-    // Toggle the theme
-    if (defaultTheme) {
-        document.documentElement.classList.remove("light-theme");
-        document.documentElement.classList.add("dark-theme");
-    } else {
-        document.documentElement.classList.remove("dark-theme");
-        document.documentElement.classList.add("light-theme");
-    }
-
-    // Set the CSS variables
-    document.documentElement.style.setProperty("--primary", defaultTheme ? "#25202d" : "#D6DaD1");
-    document.documentElement.style.setProperty("--secondary", defaultTheme ? "#D6DAD1" : "#25202d");
-});
 
 
 
@@ -113,29 +84,24 @@ Theme_Toggle.addEventListener("click", () => {
 
 /// Utils
 
-function Iterate_Over(array, callback) {
-    for (let element of array) {
-        if (element !== null) {
-            callback(element)
-        }
-    }
-}
 
 
 
-const Coordinate = (index, property) => {
 
-    const Slider = (index, property, axis) => {
+const Coordinate = (index, property, min, max, step, initial) => {
+
+    const Slider = (index, property, axis, min, max, step, initial) => {
         return `<div class="panel-geometry_shapes-panel-sliders-slider">
                                     <label>${axis}: </label>
                                     <div class="slider">
                                         <input id="slider-${index}-${property}-${axis}"
                                             class="input_slider"
-                                            min="-10" 
-                                            max="10" 
-                                            step="0.01" 
+                                            value="${initial}"
+                                            min="${min}" 
+                                            max="${max}" 
+                                            step="${step}" 
                                             type="range">
-                                        <input type="text" value="0" id="slider-${index}-${property}-${axis}-value">
+                                        <input type="text" value="${initial}" id="slider-${index}-${property}-${axis}-value">
                                     </div>
                                 </div>`
     }
@@ -143,9 +109,9 @@ const Coordinate = (index, property) => {
     return `<button class="panel-geometry_shapes-panel-dropdown" onclick="toggleSliders(${index}, '${property}')">${property}</button>
                         <div id="panel-${index}-${property}" class="panel-geometry_shapes-panel-sliders">
                             <div class="panel-geometry_shapes-panel-sliders-container">
-                                ${Slider(index, property, 'x')}
-                                ${Slider(index, property, 'y')}
-                                ${Slider(index, property, 'z')}
+                                ${Slider(index, property, 'x', min, max, step, initial)}
+                                ${Slider(index, property, 'y', min, max, step, initial)}
+                                ${Slider(index, property, 'z', min, max, step, initial)}
                             </div>
                         </div>`
 }
@@ -294,7 +260,7 @@ function addMesh() {
 
 
     /// Add all scene meshes to the scene
-    Iterate_Over(scene_meshes, mesh => scene.add(mesh))
+    Iterate_Over(scene_meshes, (index, mesh) => scene.add(mesh))
 
 }
 
@@ -307,13 +273,13 @@ function Add_Gui(index) {
                         <div id="panel-${index}" class="panel-geometry_shapes-panel">
 
                         <!-- Position Coordinates -->
-                        ${Coordinate(index, 'position')}
+                        ${Coordinate(index, 'position', -10, 10, 0.01, 1)}
                         
                         <!-- Scale Coordinates -->
-                        ${Coordinate(index, 'scale')}
+                        ${Coordinate(index, 'scale', 0, 20, 0.01, 1)}
                         
                         <!-- Rotation Coordinates -->
-                        ${Coordinate(index, 'rotation')}
+                        ${Coordinate(index, 'rotation', -Math.PI, Math.PI, 0.01, 0)}
                     
                         </div>`
 
@@ -322,126 +288,38 @@ function Add_Gui(index) {
 
 
 
-
+const array_properties = ['position', 'scale', 'rotation'];
+const array_axis = ['x', 'y', 'z'];
 
 function Connect_Gui() {
 
-    for (let i = 0; i < scene_meshes.length; i++) {
-
-        if (scene_meshes[i] !== null) {
-
-
-            /// position
-            const slider_position_x = document.getElementById(`slider-${i}-position-x`);
-            const slider_position_y = document.getElementById(`slider-${i}-position-y`);
-            const slider_position_z = document.getElementById(`slider-${i}-position-z`);
-
-            const slider_position_value_x = document.getElementById(`slider-${i}-position-x-value`);
-            const slider_position_value_y = document.getElementById(`slider-${i}-position-y-value`);
-            const slider_position_value_z = document.getElementById(`slider-${i}-position-z-value`);
-
-            slider_position_x.oninput = () => {
-                scene_meshes[i].position.x = slider_position_x.value
-                slider_position_value_x.value = slider_position_x.value
-            }
-            slider_position_y.oninput = () => {
-                scene_meshes[i].position.y = slider_position_y.value
-                slider_position_value_y.value = slider_position_y.value
-            }
-            slider_position_z.oninput = () => {
-                scene_meshes[i].position.z = slider_position_z.value
-                slider_position_value_z.value = slider_position_z.value
-            }
-
-            slider_position_value_x.oninput = () => {
-                scene_meshes[i].position.x = slider_position_value_x.value
-                slider_position_x.value = slider_position_value_x.value
-            }
-            slider_position_value_y.oninput = () => {
-                scene_meshes[i].position.y = slider_position_value_y.value
-                slider_position_y.value = slider_position_value_y.value
-            }
-            slider_position_value_z.oninput = () => {
-                scene_meshes[i].position.z = slider_position_value_z.value
-                slider_position_z.value = slider_position_value_z.value
-            }
-
-
-
-            /// scale
-            const slider_scale_x = document.getElementById(`slider-${i}-scale-x`);
-            const slider_scale_y = document.getElementById(`slider-${i}-scale-y`);
-            const slider_scale_z = document.getElementById(`slider-${i}-scale-z`);
-
-            const slider_scale_value_x = document.getElementById(`slider-${i}-scale-x-value`);
-            const slider_scale_value_y = document.getElementById(`slider-${i}-scale-y-value`);
-            const slider_scale_value_z = document.getElementById(`slider-${i}-scale-z-value`);
-
-            slider_scale_x.oninput = () => {
-                scene_meshes[i].scale.x = slider_scale_x.value
-                slider_scale_value_x.value = slider_scale_x.value
-            }
-            slider_scale_y.oninput = () => {
-                scene_meshes[i].scale.y = slider_scale_y.value
-                slider_scale_value_y.value = slider_scale_y.value
-            }
-            slider_scale_z.oninput = () => {
-                scene_meshes[i].scale.z = slider_scale_z.value
-                slider_scale_value_z.value = slider_scale_z.value
-            }
-
-            slider_scale_value_x.oninput = () => {
-                scene_meshes[i].scale.x = slider_scale_value_x.value
-                slider_scale_x.value = slider_scale_value_z.value
-            }
-            slider_scale_value_y.oninput = () => {
-                scene_meshes[i].scale.y = slider_scale_value_y.value
-                slider_scale_y.value = slider_scale_value_z.value
-            }
-            slider_scale_value_z.oninput = () => {
-                scene_meshes[i].scale.z = slider_scale_value_z.value
-                slider_scale_z.value = slider_scale_value_z.value
-            }
-
-            /// rotation
-            const slider_rotation_x = document.getElementById(`slider-${i}-rotation-x`);
-            const slider_rotation_y = document.getElementById(`slider-${i}-rotation-y`);
-            const slider_rotation_z = document.getElementById(`slider-${i}-rotation-z`);
-
-            const slider_rotation_value_x = document.getElementById(`slider-${i}-rotation-x-value`);
-            const slider_rotation_value_y = document.getElementById(`slider-${i}-rotation-y-value`);
-            const slider_rotation_value_z = document.getElementById(`slider-${i}-rotation-z-value`);
-
-            slider_rotation_x.oninput = () => {
-                scene_meshes[i].rotation.x = slider_rotation_x.value
-                slider_rotation_value_x.value = slider_rotation_x.value
-            }
-            slider_rotation_y.oninput = () => {
-                scene_meshes[i].rotation.y = slider_rotation_y.value
-                slider_rotation_value_y.value = slider_rotation_y.value
-            }
-            slider_rotation_z.oninput = () => {
-                scene_meshes[i].rotation.z = slider_rotation_z.value
-                slider_rotation_value_z.value = slider_rotation_z.value
-            }
-
-            slider_rotation_value_x.oninput = () => {
-                scene_meshes[i].rotation.x = slider_rotation_value_x.value
-                slider_rotation_x.value = slider_rotation_value_z.value
-            }
-            slider_rotation_value_y.oninput = () => {
-                scene_meshes[i].rotation.y = slider_rotation_value_y.value
-                slider_rotation_y.value = slider_rotation_value_z.value
-            }
-            slider_rotation_value_z.oninput = () => {
-                scene_meshes[i].rotation.z = slider_rotation_value_z.value
-                slider_rotation_z.value = slider_rotation_value_z.value
-            }
-
+    const Slider_Property_Axis = (element, property, axis, index) => {
+        const slider = document.getElementById(`slider-${index}-${property}-${axis}`);
+        const input = document.getElementById(`slider-${index}-${property}-${axis}-value`);
+        
+        slider.oninput = () => {
+            element[property][axis] = slider.value;
+            input.value = slider.value
         }
-
+        
+        input.oninput = () => {
+            element[property][axis] = input.value;
+            slider.value = input.value
+            
+        }
     }
+
+    Iterate_Over(scene_meshes, (index, element) => {
+        for (let property of array_properties) {
+            for (let axis of array_axis) {
+
+                Slider_Property_Axis(element, property, axis, index)
+
+            }
+        }
+    })
 }
+
 
 function Select_Mesh() {
     const selectedMeshes = Array.from(Selected_Meshes); // Create a copy of the array
@@ -746,7 +624,7 @@ for (let i = 0; i < 3; i++) {
 
 for (let i = 0; i < 4; i++) {
 
-    
+
     const hdri = document.createElement("div");
     hdri.id = `hdri-${i}`;
     hdri.classList.add("panel-texture_hdris-hdri");
