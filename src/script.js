@@ -16,26 +16,46 @@ import Coloris from "@melloware/coloris";
 // CONSTANTS
 
 import {
+    scene,
+    canvas,
+    canvas_wrapper,
     scene_meshes,
+
+    /// Textures
     Loaded_Matcaps,
     Loaded_Normals,
     Loaded_Bumps,
     Loaded_Hdris,
-    canvas_wrapper,
-    canvas,
     matcaps_panel,
     normals_panel,
     bumps_panel,
     hdris_panel,
+    matcap_count,
+    normal_count,
+    bump_count,
+    hdri_count,
+    textureLoader,
+    hdriLoader,
+
+    /// Meshes
     Shapes_Selector,
     Materials_Selector,
     Create_Mesh,
+
+    /// Panels
     Shapes_Panel,
     save,
     load,
-    textureLoader,
     ObjectLoader,
-    hdriLoader
+    array_axis,
+    array_properties,
+    sizes,
+    info_fps,
+    info_geometry,
+    info_texture,
+    info_call,
+    info_triangle,
+    info_points,
 } from './core/Constants';
 
 
@@ -43,19 +63,12 @@ import {
 
 import { Iterate_Over } from './core/Utils';
 
+/// HTML
 
-
-
-/**
-    Base
-*/
-
-
-
+import { HTML_Checkbox, HTML_Checkbox_Checked } from './core/Html';
 
 /// VARIABLES
-let scene = new THREE.Scene();
-let Selected_Meshes = [];       /// keep like this so that you can modify it with the select_shape function
+let Selected_Meshes = [];
 let geometry;
 let material;
 let light;
@@ -63,12 +76,56 @@ let shape;
 
 
 
-/// LOADERS
+
+/**
+ * BASE: The Building Blocks of THREEJS, Includes Renderer, Camera, Controls, Sizing 
+ */
+
+
+/// Renderer
+
+const renderer = new THREE.WebGLRenderer({
+    canvas: canvas,
+    alpha: true,
+})
+renderer.setSize(sizes.width, sizes.height)
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+renderer.shadowMap.enabled = true
+
+
+/// Camera
+
+let camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100) 
+camera.position.set(2, 1, 2)
+
+scene.add(camera)
+
+
+/// Controls
+
+// Controls
+let controls = new OrbitControls(camera, canvas)
+controls.enableDamping = true
 
 
 
+/// Sizing
 
 
+window.addEventListener('resize', () => {
+    // Update sizes
+    sizes.width = canvas_wrapper.clientWidth;
+    sizes.height = canvas_wrapper.clientHeight;
+
+    // Update camera
+    camera.aspect = sizes.width / sizes.height
+    camera.updateProjectionMatrix()
+
+    // Update renderer
+    renderer.setSize(sizes.width, sizes.height)
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+    renderer.render(scene, camera)
+})
 
 
 
@@ -82,162 +139,110 @@ let shape;
 
 
 
-/// Utils
-
-
-
-
-
-const Coordinate = (index, property, min, max, step, initial) => {
-
-    const Slider = (index, property, axis, min, max, step, initial) => {
-        return `<div class="panel-geometry_shapes-panel-sliders-slider">
-                                    <label>${axis}: </label>
-                                    <div class="slider">
-                                        <input id="slider-${index}-${property}-${axis}"
-                                            class="input_slider"
-                                            value="${initial}"
-                                            min="${min}" 
-                                            max="${max}" 
-                                            step="${step}" 
-                                            type="range">
-                                        <input type="text" value="${initial}" id="slider-${index}-${property}-${axis}-value">
-                                    </div>
-                                </div>`
-    }
-
-    return `<button class="panel-geometry_shapes-panel-dropdown" onclick="toggleSliders(${index}, '${property}')">${property}</button>
-                        <div id="panel-${index}-${property}" class="panel-geometry_shapes-panel-sliders">
-                            <div class="panel-geometry_shapes-panel-sliders-container">
-                                ${Slider(index, property, 'x', min, max, step, initial)}
-                                ${Slider(index, property, 'y', min, max, step, initial)}
-                                ${Slider(index, property, 'z', min, max, step, initial)}
-                            </div>
-                        </div>`
-}
-
-
-
-
-
-
-/**
- * Save Function
- */
-
-
-save.addEventListener("click", () => {
-    let JsonSavedScene = JSON.stringify(scene)
-    localStorage.setItem("three-scene", JsonSavedScene);
-})
-
-
-// won't work for heavy scenes that exceed a certain quota (think of other solution)
-load.addEventListener("click", () => {
-    const StringifiedScene = localStorage.getItem("three-scene");
-    const loadedScene = ObjectLoader.parse(JSON.parse(StringifiedScene))
-    scene = loadedScene;
-})
-
-
-
 /// Create New Mesh
 
 
 Shapes_Selector.value = 1;
 Materials_Selector.value = 1;
 
-function addMesh() {
+function Shape_and_Geometry(){
     switch (true) {
-        case Shapes_Selector.value == "1":
+        case Shapes_Selector.value == 1:
             geometry = new THREE.BoxGeometry(1, 1, 1)
             break;
-        case Shapes_Selector.value == "2":
+        case Shapes_Selector.value == 2:
             geometry = new THREE.PlaneGeometry(1, 1)
             break;
-        case Shapes_Selector.value == "3":
+        case Shapes_Selector.value == 3:
             geometry = new THREE.CircleGeometry(1)
             break;
-        case Shapes_Selector.value == "4":
+        case Shapes_Selector.value == 4:
             geometry = new THREE.SphereGeometry(1, 32, 16)
             break;
-        case Shapes_Selector.value == "5":
+        case Shapes_Selector.value == 5:
             geometry = new THREE.CylinderGeometry(1, 1, 2, 32)
             break;
-        case Shapes_Selector.value == "6":
+        case Shapes_Selector.value == 6:
             geometry = new THREE.CapsuleGeometry(1, 1, 16, 32)
             break;
-        case Shapes_Selector.value == "7":
+        case Shapes_Selector.value == 7:
             geometry = new THREE.RingGeometry(1, 2, 32, 16)
             break;
-        case Shapes_Selector.value == "8":
+        case Shapes_Selector.value == 8:
             geometry = new THREE.TorusGeometry(1, 0.5, 32, 100)
             break;
-        case Shapes_Selector.value == "9":
+        case Shapes_Selector.value == 9:
             geometry = new THREE.OctahedronGeometry(1, 1)
             break;
-        case Shapes_Selector.value == "10":
+        case Shapes_Selector.value == 10:
             geometry = new THREE.ConeGeometry(1, 1, 8)
             break;
-        case Shapes_Selector.value == "11":
+        case Shapes_Selector.value == 11:
             geometry = new THREE.OctahedronGeometry(1, 2)
             break;
-        case Shapes_Selector.value == "12":
+        case Shapes_Selector.value == 12:
             light = new THREE.AmbientLight(0x4D4D4D);
             break;
-        case Shapes_Selector.value == "13":
+        case Shapes_Selector.value == 13:
             light = new THREE.DirectionalLight(0xffffff);
             break;
-        case Shapes_Selector.value == "14":
+        case Shapes_Selector.value == 14:
             light = new THREE.HemisphereLight(0xffffff, 0xffffff);
             break;
-        case Shapes_Selector.value == "15":
+        case Shapes_Selector.value == 15:
             light = new THREE.PointLight(0xffffff);
             break;
-        case Shapes_Selector.value == "16":
+        case Shapes_Selector.value == 16:
             light = new THREE.RectAreaLight(0xffffff);
             break;
-        case Shapes_Selector.value == "17":
+        case Shapes_Selector.value == 17:
             light = new THREE.SpotLight(0xffffff);
             break;
         default:
             geometry = new THREE.BoxGeometry(1, 1, 1)
+            break;
     }
 
     switch (true) {
-        case Materials_Selector.value == "1":
+        case Materials_Selector.value == 1:
             material = new THREE.MeshBasicMaterial()
             break;
-        case Materials_Selector.value == "2":
+        case Materials_Selector.value == 2:
             material = new THREE.MeshStandardMaterial()
             break;
-        case Materials_Selector.value == "3":
+        case Materials_Selector.value == 3:
             material = new THREE.MeshPhysicalMaterial()
             break;
-        case Materials_Selector.value == "4":
+        case Materials_Selector.value == 4:
             material = new THREE.MeshDepthMaterial()
             break;
-        case Materials_Selector.value == "5":
+        case Materials_Selector.value == 5:
             material = new THREE.MeshLambertMaterial()
             break;
-        case Materials_Selector.value == "6":
+        case Materials_Selector.value == 6:
             material = new THREE.MeshMatcapMaterial()
             break;
-        case Materials_Selector.value == "7":
+        case Materials_Selector.value == 7:
             material = new THREE.MeshNormalMaterial()
             break;
-        case Materials_Selector.value == "8":
+        case Materials_Selector.value == 8:
             material = new THREE.MeshPhongMaterial()
             break;
-        case Materials_Selector.value == "9":
+        case Materials_Selector.value == 9:
             material = new THREE.MeshToonMaterial()
             break;
         default:
             material = new THREE.MeshBasicMaterial({ color: '#ffaaaa' })
+            break;
     }
+}
 
-    /// If it's not a light, else if it is.
-    if (+Shapes_Selector.value <= 11) {
+function Instantiate_Mesh() {
+    
+    Shape_and_Geometry()
+
+    /// Normal Geometries
+    if (Shapes_Selector.value <= 11) {
         const Mesh = new THREE.Mesh(geometry, material)                 /// Create the Mesh
         scene_meshes.push(Mesh)                                         /// Add it to the Array of Meshes to be Compiled
         Selected_Meshes.push(Mesh)                                      /// Select it
@@ -256,6 +261,8 @@ function addMesh() {
         Add_Gui(scene_meshes.indexOf(light))
         Connect_Gui()
         Select_Mesh()
+        
+        shape_info_geometry.innerHTML = Mesh.geometry.type
     }
 
 
@@ -265,7 +272,38 @@ function addMesh() {
 }
 
 
+
 function Add_Gui(index) {
+
+    const Coordinates = (index, property, min, max, step, initial) => {
+
+        const Slider = (index, property, axis, min, max, step, initial) => {
+            return `<div class="panel-geometry_shapes-panel-sliders-slider">
+                                    <label>${axis}: </label>
+                                    <div class="slider">
+                                        <input id="slider-${index}-${property}-${axis}"
+                                            class="input_slider"
+                                            value="${initial}"
+                                            min="${min}" 
+                                            max="${max}" 
+                                            step="${step}" 
+                                            type="range">
+                                        <input type="text" value="${initial}" id="slider-${index}-${property}-${axis}-value">
+                                    </div>
+                                </div>`
+        }
+
+        return `<button class="panel-geometry_shapes-panel-dropdown" onclick="toggleSliders(${index}, '${property}')">${property}</button>
+                        <div id="panel-${index}-${property}" class="panel-geometry_shapes-panel-sliders">
+                            <div class="panel-geometry_shapes-panel-sliders-container">
+                                ${Slider(index, property, 'x', min, max, step, initial)}
+                                ${Slider(index, property, 'y', min, max, step, initial)}
+                                ${Slider(index, property, 'z', min, max, step, initial)}
+                            </div>
+                        </div>`
+    }
+
+
     shape = document.createElement("div");
     shape.classList.add('panel-geometry_shapes-container');
     shape.id = `mesh-${index}`;
@@ -273,39 +311,36 @@ function Add_Gui(index) {
                         <div id="panel-${index}" class="panel-geometry_shapes-panel">
 
                         <!-- Position Coordinates -->
-                        ${Coordinate(index, 'position', -10, 10, 0.01, 1)}
+                        ${Coordinates(index, 'position', -10, 10, 0.01, 1)}
                         
                         <!-- Scale Coordinates -->
-                        ${Coordinate(index, 'scale', 0, 20, 0.01, 1)}
+                        ${Coordinates(index, 'scale', 0, 20, 0.01, 1)}
                         
                         <!-- Rotation Coordinates -->
-                        ${Coordinate(index, 'rotation', -Math.PI, Math.PI, 0.01, 0)}
+                        ${Coordinates(index, 'rotation', -Math.PI, Math.PI, 0.01, 0)}
                     
                         </div>`
 
     Shapes_Panel.appendChild(shape)
 }
 
-
-
-const array_properties = ['position', 'scale', 'rotation'];
-const array_axis = ['x', 'y', 'z'];
+/// Connects the created GUI with the mesh 
 
 function Connect_Gui() {
 
     const Slider_Property_Axis = (element, property, axis, index) => {
         const slider = document.getElementById(`slider-${index}-${property}-${axis}`);
         const input = document.getElementById(`slider-${index}-${property}-${axis}-value`);
-        
+
         slider.oninput = () => {
             element[property][axis] = slider.value;
             input.value = slider.value
         }
-        
+
         input.oninput = () => {
             element[property][axis] = input.value;
             slider.value = input.value
-            
+
         }
     }
 
@@ -350,18 +385,19 @@ function Select_Mesh() {
     });
 }
 
-Create_Mesh.addEventListener("click", addMesh)
+Create_Mesh.addEventListener("click", Instantiate_Mesh)
+
+
+
 
 /**
- * Shape Specific Options
+ *  PANELS: Camera, Shape Options...
  */
 
 const rename_shapes = document.getElementById("rename-shapes")
 const delete_shapes = document.getElementById("delete-shapes")
 const shape_info_geometry = document.getElementById("shape-info-geometry")
 const shape_info_material = document.getElementById("shape-info-material")
-
-
 
 
 function Delete_Shapes() {
@@ -407,49 +443,8 @@ rename_shapes.addEventListener("input", () => Rename_Shapes())
 
 
 
-
-
-
-
-/**
- * Sizes
- */
-const sizes = {
-    width: canvas_wrapper.clientWidth,
-    height: canvas_wrapper.clientHeight,
-}
-
-window.addEventListener('resize', () => {
-    // Update sizes
-    sizes.width = canvas_wrapper.clientWidth;
-    sizes.height = canvas_wrapper.clientHeight;
-
-    // Update camera
-    camera.aspect = sizes.width / sizes.height
-    camera.updateProjectionMatrix()
-
-    // Update renderer
-    renderer.setSize(sizes.width, sizes.height)
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    renderer.render(scene, camera)
-})
-
-/**
- * Camera
- */
-// Base camera
-
-let camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
-const cameraOrtho = new THREE.OrthographicCamera(sizes.width / - 2, sizes.width / 2, sizes.height / 2, sizes.height / - 2, 1, 1000)
-camera.position.set(2, 1, 2)
-cameraOrtho.position.set(-3.32, 1.93, -4.88)
-
-if (scene) {
-    scene.add(camera)
-}
-
-
 const radio_camera = document.getElementById("radio-camera");
+
 radio_camera.addEventListener("input", () => {
     const data = new FormData(radio_camera);
 
@@ -497,26 +492,8 @@ z_view.addEventListener("click", () => {
     camera.position.set(0, 0, 5)
 })
 
-
-
-// Controls
-let controls = new OrbitControls(camera, canvas)
-controls.enableDamping = true
-
 /**
- * Renderer
- */
-const renderer = new THREE.WebGLRenderer({
-    canvas: canvas,
-    alpha: true
-})
-
-renderer.setSize(sizes.width, sizes.height)
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-renderer.shadowMap.enabled = true
-
-/**
- * Textures
+ * TEXTURES: Matcaps, Normals, Bumps & HDRI 
  */
 
 
@@ -599,12 +576,9 @@ function CreateTextureButtonAndEventListener(textureType, i) {
     return button;
 }
 
-// const mesh = new THREE.Mesh(new THREE.SphereGeometry, new THREE.MeshPhysicalMaterial({ color: 'white' }))
-// mesh.material.bumpMap = textureLoader.load('textures/bumps/0.png')
-// scene.add(mesh)
 
 
-for (let i = 0; i < 8; i++) {
+for (let i = 0; i < matcap_count; i++) {
     const matcapButton = CreateTextureButtonAndEventListener("matcap", i);
     matcaps_panel.appendChild(matcapButton);
 
@@ -612,17 +586,17 @@ for (let i = 0; i < 8; i++) {
     normals_panel.appendChild(normalButton);
 }
 
-for (let i = 0; i < 3; i++) {
+for (let i = 0; i < bump_count; i++) {
     const bumpButton = CreateTextureButtonAndEventListener("bump", i);
     bumps_panel.appendChild(bumpButton);
 }
 
 
 // HDRIS: Can't add it above because it uses a different loader and different extension.
-/// We're also Lazy Loading them for their big size
+/// We're also Lazy Loading them for their big size (not really)
 
 
-for (let i = 0; i < 4; i++) {
+for (let i = 0; i < hdri_count; i++) {
 
 
     const hdri = document.createElement("div");
@@ -655,9 +629,20 @@ for (let i = 0; i < 4; i++) {
 }
 
 
-/// Materials
 
-/// color picker
+
+
+
+/**
+ *  MATERIALS: Coloris, Radios, Checkboxes and Sliders
+ */
+
+
+
+
+
+/// Color picker: set the color of all selected meshes
+
 Coloris.init();
 Coloris({ el: "#coloris", alpha: false });
 
@@ -684,12 +669,7 @@ Coloris({
 
 
 
-/**
- *  Radios, Checkboxes and Sliders
- */
-
-
-/// Radios
+/// Radios: These Radios set the general constants of either the material or the renderer.
 
 const radioSide = document.getElementById("radio-side");
 const radioBlending = document.getElementById("radio-blending");
@@ -761,38 +741,19 @@ radios.forEach((radio) => {
 
 
 
-// checkboxes
+// Checkboxes: These Checkboxes set the Material Booleans
 
 const Checkboxes = document.querySelectorAll(".checkbox")
 for (let checkbox of Checkboxes) {
-    checkbox.innerHTML = `<svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-<mask id="path-1-inside-1_83_27" fill="white">
-<rect width="13" height="13" rx="4"/>
-</mask>
-<rect width="13" height="13" rx="4" fill="var(--primary)" stroke="var(--primary)" stroke-width="13" mask="url(#path-1-inside-1_83_27)"/>
-</svg>
-`
+    checkbox.innerHTML = HTML_Checkbox;
     checkbox.value = false
 
     checkbox.addEventListener("click", () => {
         if (!checkbox.value) {
-            checkbox.innerHTML = `<svg width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-<mask id="path-1-inside-1_83_28" fill="white">
-<rect y="0.73172" width="13.0653" height="13.0653" rx="4"/>
-</mask>
-<rect y="0.73172" width="13.0653" height="13.0653" rx="4" fill="#25202C" stroke="#25202C" stroke-width="13.0653" mask="url(#path-1-inside-1_83_28)"/>
-<path d="M6.10451 11.2842C5.37885 10.5585 5.37885 9.38198 6.10451 8.65632L13.0437 1.71716C13.5879 1.17292 14.4703 1.17291 15.0146 1.71716V1.71716C15.5588 2.26141 15.5588 3.1438 15.0146 3.68805L7.41844 11.2842C7.05561 11.647 6.46734 11.647 6.10451 11.2842V11.2842Z" fill="#22A497"/>
-<path d="M3.4678 6.65425C4.01205 6.11001 4.89445 6.11001 5.43869 6.65425L7.4343 8.64987C8.15996 9.37553 8.15997 10.5521 7.4343 11.2777V11.2777C7.07147 11.6405 6.48321 11.6405 6.12038 11.2777L3.4678 8.62514C2.92356 8.08089 2.92356 7.1985 3.4678 6.65425V6.65425Z" fill="#22A497"/>
-</svg>`;
+            checkbox.innerHTML = HTML_Checkbox_Checked;
             checkbox.value = true;
         } else {
-            checkbox.innerHTML = `<svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-<mask id="path-1-inside-1_83_27" fill="white">
-<rect width="13" height="13" rx="4"/>
-</mask>
-<rect width="13" height="13" rx="4" fill="var(--primary)" stroke="var(--primary) stroke-width="13" mask="url(#path-1-inside-1_83_27)"/>
-</svg>
-`;
+            checkbox.innerHTML = HTML_Checkbox;
             checkbox.value = false;
         }
     })
@@ -900,7 +861,10 @@ function Checkbox_Meshes() {
 }
 
 
-/// sliders
+
+
+/// Sliders: These Sliders set the float values for the material's properties
+
 const sliderHandlers = {
     "sldr_opacity": (mesh, value) => {
         if (mesh !== null) {
@@ -979,35 +943,6 @@ const sliderHandlers = {
             mesh.material.needsUpdate = true;
         }
     },
-
-    // Geometry Transformations do Not Work
-    "sldr_radius": (mesh, value) => {
-        if (mesh !== null) {
-            const newGeometry = mesh.geometry.clone();
-            newGeometry.parameters.radius = +value;
-            mesh.geometry = newGeometry;
-            sldr_radius_value.value = value;
-            mesh.geometry.needsUpdate = true;
-            mesh.updateMatrix();
-        }
-    },
-    "sldr_length": (mesh, value) => {
-        if (mesh !== null) {
-            const newGeometry = mesh.geometry.clone();
-            newGeometry.parameters.length = +value;
-            mesh.geometry = newGeometry;
-            sldr_length_value.value = value;
-            mesh.geometry.needsUpdate = true;
-        }
-    },
-    "sldr_segments": (mesh, value) => {
-        if (mesh !== null) {
-            console.log(mesh.geometry)
-            mesh.geometry.parameters.radialSegments = +value;
-            sldr_segments_value.value = value;
-            mesh.geometry.needsUpdate = true;
-        }
-    },
 };
 
 function Slider_Meshes() {
@@ -1023,18 +958,20 @@ function Slider_Meshes() {
 }
 
 
-/// info panel
 
-const info_fps = document.getElementById("info-fps")
-const info_geometry = document.getElementById("info-geometry")
-const info_texture = document.getElementById("info-texture")
-const info_call = document.getElementById("info-call")
-const info_triangle = document.getElementById("info-triangle")
-const info_points = document.getElementById("info-points")
+
+
+
+
+
+
+
 
 /**
- * Animate
+ * Animate: Here we Animate the scene and update the fps counter.
  */
+
+
 const clock = new THREE.Clock()
 let frames = 0, prevTime = performance.now();
 
@@ -1074,182 +1011,3 @@ const tick = () => {
 }
 
 tick();
-
-
-
-
-
-// // Geometry
-// const geometry = new THREE.BoxGeometry()
-
-// // Material
-// const material1 = new THREE.MeshBasicMaterial({ color: '#aaffaa' });
-// const material2 = new THREE.MeshBasicMaterial({ color: '#ffaaaa' });
-// const material3 = new THREE.MeshBasicMaterial({ color: '#aaaaff' });
-
-// // Mesh
-
-// const built_meshes = [new THREE.Mesh(geometry, material1), new THREE.Mesh(geometry, material2), new THREE.Mesh(geometry, material3)]
-
-
-// const debugObject = {}
-// debugObject.color = '#aaaaff'
-// debugObject.MeshCreated = []
-
-// debugObject.setToOrigin = () => {
-//     debugObject.MeshCreated.position.x = 0
-//     debugObject.MeshCreated.position.y = 2.5
-//     debugObject.MeshCreated.position.z = 0
-// }
-
-// debugObject.setToOriginalShape = () => {
-//     debugObject.MeshCreated.scale.x = 1
-//     debugObject.MeshCreated.scale.y = 1
-//     debugObject.MeshCreated.scale.z = 1
-// }
-
-// debugObject.setToOriginalRotation = () => {
-//     debugObject.MeshCreated.rotation.x = 0
-//     debugObject.MeshCreated.rotation.y = 0
-//     debugObject.MeshCreated.rotation.z = 0
-// }
-
-
-// debugObject.createFigure = () => {
-
-//     debugObject.MeshCreated.push(new THREE.Mesh(
-//         new THREE.BoxGeometry(1, 1, 1),
-//         new THREE.MeshBasicMaterial({ color: debugObject.color })
-//     ))
-
-//     for(let Meshes of debugObject.MeshCreated){
-//         scene.add(Meshes)
-//         Meshes.position.y += 1
-//     }
-
-// }
-
-
-
-
-// const normal = textureLoader.load("./textures/rustic/nor.png")
-// const ao = textureLoader.load("./textures/rustic/ao.png")
-// const arm = textureLoader.load("./textures/rustic/arm.png")
-// const diff = textureLoader.load("./textures/rustic/diff.png")
-// const dis = textureLoader.load("./textures/rustic/dis.png")
-// const rough = textureLoader.load("./textures/rustic/rough.png")
-
-// const matcap = textureLoader.load('./textures/matcaps/14.png')
-// const normal = textureLoader.load('./textures/normals/1.png')
-// const bump = textureLoader.load('./textures/bumps/0.png')
-
-// const Mesh = new THREE.Mesh(new THREE.BoxGeometry(1,1,1), new THREE.MeshMatcapMaterial());
-// scene.add(Mesh);
-
-
-// Mesh.material.matcap = matcap
-// Mesh.material.normalMap = normal
-// Mesh.material.bumpMap = bump
-
-// const normal = textureLoader.load("./textures/rock/nor.png")
-// const ao = textureLoader.load("./textures/rock/ao.png")
-// const arm = textureLoader.load("./textures/rock/arm.png")
-// const diff = textureLoader.load("./textures/rock/diff.png")
-// const dis = textureLoader.load("./textures/rock/dis.png")
-// const rough = textureLoader.load("./textures/rock/rough.png")
-
-
-// Mesh.material.displacementScale = 0.02;
-
-// Mesh.material.map = diff
-// Mesh.material.normalMap = normal
-// Mesh.material.aoMap = ao
-// Mesh.material.metalnessMap = arm
-// Mesh.material.displacementMap = dis
-// Mesh.material.roughnessMap = rough
-
-// const directionalLight = new THREE.DirectionalLight(0xffffff, 0.1);
-// scene.add(directionalLight);
-
-// const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-// scene.add(ambientLight);
-
-// directionalLight.position.set(2, 2, 2)
-
-// const Platform = new THREE.Mesh(
-//     new THREE.BoxGeometry(5, 0.5, 5),
-//     new THREE.MeshPhysicalMaterial({ color: '#aaffaa' })
-// )
-
-
-// const Plane = new THREE.Mesh(
-//     new THREE.PlaneGeometry(10, 10),
-//     new THREE.MeshBasicMaterial({ color: '#ddddff' })
-// )
-
-// Plane.rotation.x = - Math.PI / 2
-// Plane.position.y = -1
-// Platform.position.y = -0.75
-
-
-// const xLine = new THREE.Mesh(
-//     new THREE.PlaneGeometry(100, 0.01),
-//     new THREE.MeshBasicMaterial({ color: '#ff0000', side: THREE.DoubleSide, transparent: true, opacity: 0.2 })
-// )
-
-// const yLine = new THREE.Mesh(
-//     new THREE.PlaneGeometry(0.01, 100),
-//     new THREE.MeshBasicMaterial({ color: '#00ff00', side: THREE.DoubleSide, transparent: true, opacity: 0.2 })
-// )
-
-// const zLine = new THREE.Mesh(
-//     new THREE.BoxGeometry(0.01, 0.01, 100),
-//     new THREE.MeshBasicMaterial({ color: '#0000ff', side: THREE.DoubleSide, transparent: true, opacity: 0.2 })
-// )
-
-// scene.add(xLine, yLine, zLine)
-
-// Platform.material.color.set(new THREE.Color('#aaccff'))
-
-
-// scene.add(Plane, Platform)
-
-
-
-// // Remove the corresponding GUI element.
-// console.log("removing the gui element: ", scene_meshes.indexOf(mesh))
-// const shape_gui = document.getElementById(`mesh-${scene_meshes.indexOf(mesh)}`);
-// shape_gui.remove();
-
-// // Delete the mesh from the original scene_meshes array.
-// console.log("deleting the original mesh: ", scene_meshes.indexOf(mesh))
-// scene_meshes.splice(scene_meshes.indexOf(mesh), 1);
-
-// // Remove the mesh from the scene.
-// console.log("removing the mesh from the scene: ")
-// scene.remove(mesh);
-
-
-
-// load.addEventListener("click", () => {
-//     const StringifiedScene = localStorage.getItem("three-scene");
-//     // try {
-//     //     // Parse the stringified scene back into an object
-//     //     scene = JSON.parse(StringifiedScene);
-//     // } catch (error) {
-//     //     // The stringified scene object is invalid
-//     //     console.error("Invalid scene object: " + error);
-//     //     return;
-//     // // }
-//     // console.log("scene loaded")
-
-//     const loadedScene = ObjectLoader.parse(JSON.parse(StringifiedScene))
-
-//     // console.log("JSON scene: ")
-//     // console.log(loadedScene)
-//     // console.log("Normal Scene: " )
-//     // console.log(scene)
-
-//     scene = loadedScene;
-
-// })
