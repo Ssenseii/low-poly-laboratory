@@ -22,7 +22,7 @@ A **threejs**-Powered **3d modeling** website written entirely in Vanilla JS.
 
 ## Demo
 
-[LOW POLY LABORATORY](https://www.youtube.com/)
+[LOW POLY LABORATORY](https://low-poly-laboratory.vercel.app/)
 
 ## Features
 
@@ -39,7 +39,7 @@ A **threejs**-Powered **3d modeling** website written entirely in Vanilla JS.
 -   Orthographic and Perspective Camera Support
 -   Multiple Export Settings for your threejs projects
 -   Scalable for next versions of threejs (you can always add more)
--   Minified Assets (under 1k)
+-   Minified Assets
 
 ### In development:
 
@@ -50,11 +50,11 @@ A **threejs**-Powered **3d modeling** website written entirely in Vanilla JS.
 -   Animation support
 -   Shader Support
 -   Cloning Shapes
--   Console Manipulations
+-   Console Manipulations and Adding Scripts
 
 ## Lessons Learned
 
-**Programming: **
+**Programming:**
 
 -   Object Oriented Programming vs Functional Programming
 -   Python (bulk-renaming)
@@ -111,6 +111,21 @@ Well, it's like an open-source 3D modeling software but for threejs's pre-built 
 -   it's not set up for mobile devices.
 -   no dev tools, no sfx editor, no animations editor.
 -   minimal prior knowledge in threejs is needed to operate it
+
+#### Can I Contribute?
+
+Everyone's really welcome to take a look at my code and add pull request for any changes they deem fit for the site.
+
+#### Where's the Documentation?
+
+As of now, I'm working on fixing the bugs of the released alpha version but after I'm finished with that. I'll post a developer friendly guide to adding content.
+The code is still a mess. I need to seperate lots of code, and pick whether I want to go the functional programming route or the OOP one.
+The code is not that hard to understand as it's written specifically for future me to easily get in and change stuff.
+There are comments everywhere + I have a txt file full of informations that i'm not putting on github until I'm done with the alpha and release the beta.
+
+#### Can I submit an issue?
+
+YES! Please do. I'd love any kind of feedback so I can turn this into an actual working thing that I'm very much proud of. 
 
 ## Screenshots
 

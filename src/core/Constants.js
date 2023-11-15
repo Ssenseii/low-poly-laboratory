@@ -71,8 +71,8 @@ export const array_axis = ['x', 'y', 'z'];
 
 export const matcap_count = 8
 export const normal_count = 8
-export const bump_count = 3
-export const hdri_count = 3
+export const bump_count = 4
+export const hdri_count = 4
 
 /// Sizes
 
