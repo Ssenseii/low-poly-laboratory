@@ -261,8 +261,6 @@ function Instantiate_Mesh() {
         Add_Gui(scene_meshes.indexOf(light))
         Connect_Gui()
         Select_Mesh()
-        
-        shape_info_geometry.innerHTML = Mesh.geometry.type
     }
 
 
