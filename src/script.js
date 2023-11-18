@@ -95,7 +95,7 @@ renderer.shadowMap.enabled = true
 
 /// Camera
 
-let camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100) 
+let camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
 camera.position.set(2, 1, 2)
 
 scene.add(camera)
@@ -105,7 +105,7 @@ scene.add(camera)
 
 // Controls
 let controls = new OrbitControls(camera, canvas)
-controls.enableDamping = true
+controls.enableDamping = true;
 
 
 
@@ -118,13 +118,13 @@ window.addEventListener('resize', () => {
     sizes.height = canvas_wrapper.clientHeight;
 
     // Update camera
-    camera.aspect = sizes.width / sizes.height
-    camera.updateProjectionMatrix()
+    camera.aspect = sizes.width / sizes.height;
+    camera.updateProjectionMatrix();
 
     // Update renderer
-    renderer.setSize(sizes.width, sizes.height)
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    renderer.render(scene, camera)
+    renderer.setSize(sizes.width, sizes.height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.render(scene, camera);
 })
 
 
@@ -145,7 +145,17 @@ window.addEventListener('resize', () => {
 Shapes_Selector.value = 1;
 Materials_Selector.value = 1;
 
-function Shape_and_Geometry(){
+Shapes_Selector.addEventListener('change', () => {
+    if (Shapes_Selector.value > 11) {
+        Materials_Selector.disabled = true;
+        Create_Mesh.innerText = 'Create New Light'
+    } else {
+        Materials_Selector.disabled = false;
+        Create_Mesh.innerText = 'Create New Mesh'
+    }
+});
+
+function Shape_and_Geometry() {
     switch (true) {
         case Shapes_Selector.value == 1:
             geometry = new THREE.BoxGeometry(1, 1, 1)
@@ -203,6 +213,8 @@ function Shape_and_Geometry(){
             break;
     }
 
+    /// if the shape selected is a light, no need for materials to be selected => disabled
+
     switch (true) {
         case Materials_Selector.value == 1:
             material = new THREE.MeshBasicMaterial()
@@ -238,7 +250,7 @@ function Shape_and_Geometry(){
 }
 
 function Instantiate_Mesh() {
-    
+
     Shape_and_Geometry()
 
     /// Normal Geometries
@@ -252,6 +264,9 @@ function Instantiate_Mesh() {
         Checkbox_Meshes()                                               /// Connect the new Mesh to the Checkboxes
         Slider_Meshes()                                                 /// Connect the new Mesh to the Sliders
 
+        console.log(geometry)
+        Log_Info(`Created Mesh with ${geometry.type} and ${material.type}`)
+
         shape_info_geometry.innerHTML = Mesh.geometry.type
         shape_info_material.innerHTML = Mesh.material.type
     }
@@ -261,6 +276,7 @@ function Instantiate_Mesh() {
         Add_Gui(scene_meshes.indexOf(light))
         Connect_Gui()
         Select_Mesh()
+        Log_Info(`Created ${light.type}`)
     }
 
 
@@ -315,7 +331,7 @@ function Add_Gui(index) {
                         ${Coordinates(index, 'scale', 0, 20, 0.01, 1)}
                         
                         <!-- Rotation Coordinates -->
-                        ${Coordinates(index, 'rotation', -Math.PI, Math.PI, 0.01, 0)}
+                        ${Coordinates(index, 'rotation', -Math.PI.toFixed(2), Math.PI.toFixed(2), 0.01, 0)}
                     
                         </div>`
 
@@ -368,12 +384,16 @@ function Select_Mesh() {
                     // selectedMeshes.splice(selectedMeshes.indexOf(mesh), 1);
                     selectedMeshes[index] = null;
                     shape.style.backgroundColor = "var(--selectable)";
+
+                    Log_Info(`Unselected Shape #${index}`)
                 } else {
                     // selectedMeshes.push(mesh);
                     selectedMeshes[index] = mesh;
                     shape.style.backgroundColor = "var(--selected)";
                     shape_info_geometry.innerHTML = mesh.geometry.type
                     shape_info_material.innerHTML = mesh.material.type
+
+                    Log_Info(`Selected Shape #${index}`)
                 }
 
                 // Update the original array
@@ -418,6 +438,8 @@ function Delete_Shapes() {
 
                 mesh.material.dispose()
                 mesh.geometry.dispose()
+
+                Log_Info(`Removed Shape #${index}`)
             }
         }
     }
@@ -431,6 +453,8 @@ function Rename_Shapes() {
         if (mesh) {
             const shape_gui_button = document.getElementById(`shape-${index}`);
             shape_gui_button.innerHTML = rename_shapes.value;
+
+            Log_Info(`Renamed Shape #${index} to ${rename_shapes.value}`)
         }
     }
 
@@ -455,6 +479,7 @@ radio_camera.addEventListener("input", () => {
                 camera.position.set(2, 1, 2)
                 controls = new OrbitControls(camera, canvas)
                 controls.enableDamping = true
+                Log_Info("Camera set to Perspective mode")
                 break;
             case entry[1] == '1':
                 scene.remove(camera)
@@ -465,6 +490,7 @@ radio_camera.addEventListener("input", () => {
                 camera.updateProjectionMatrix();
                 controls = new OrbitControls(camera, canvas)
                 controls.enableDamping = true
+                Log_Info("Camera set to Orthographic mode")
                 break;
             default:
                 console.log("default")
@@ -480,15 +506,20 @@ const z_view = document.getElementById("z-view")
 
 x_view.addEventListener("click", () => {
     camera.position.set(5, 0, 0)
+    Log_Info("Looking through the X axis ")
 })
 
 y_view.addEventListener("click", () => {
     camera.position.set(0, 5, 0)
+    Log_Info("Looking through the Y axis ")
 })
 
 z_view.addEventListener("click", () => {
     camera.position.set(0, 0, 5)
+    Log_Info("Looking through the Z axis ")
 })
+
+
 
 /**
  * TEXTURES: Matcaps, Normals, Bumps & HDRI 
@@ -551,16 +582,32 @@ function CreateTextureButtonAndEventListener(textureType, i) {
             if (mesh !== null) {
                 switch (true) {
                     case textureType == "matcap":
-                        mesh.material.matcap = loadedTexture;
-                        mesh.material.needsUpdate = true;
+                        if (mesh.material.type === "MeshMatcapMaterial") {
+                            mesh.material.matcap = loadedTexture;
+                            mesh.material.needsUpdate = true;
+                            Log_Info("Matcap applied to selected Meshes successfully")
+                        } else {
+                            Log_Info("You can only apply matcaps to Matcap Materials", "warning")
+                        }
                         break;
                     case textureType == "normal":
-                        mesh.material.normalMap = loadedTexture;
-                        mesh.material.needsUpdate = true;
+                        if (mesh.material.type === "MeshBasicMaterial" || mesh.material.type === "MeshDepthMaterial") {
+                            Log_Info(`you can't apply normal maps to this material`, "warning");
+                        } else {
+                            mesh.material.normalMap = loadedTexture;
+                            mesh.material.needsUpdate = true;
+                            Log_Info("Matcap applied to selected Meshes successfully")
+                        }
                         break;
                     case textureType == "bump":
-                        mesh.material.bumpMap = loadedTexture;
-                        mesh.material.needsUpdate = true;
+                        if (mesh.material.type === "MeshBasicMaterial" || mesh.material.type === "MeshDepthMaterial") {
+                            Log_Info(`you can't apply bump maps to this material`, "warning");
+                        } else {
+                            mesh.material.bumpMap = loadedTexture;
+                            mesh.material.needsUpdate = true;
+                            Log_Info("Applied Bump Map to Selected Meshes")
+                        }
+
                         break;
                     // Add more cases here for other texture types
                     default:
@@ -621,6 +668,7 @@ for (let i = 0; i < hdri_count; i++) {
             if (mesh !== null) {
                 mesh.material.envMap = Loaded_Hdri;
                 mesh.material.needsUpdate = true;
+                Log_Info("Applied HDRI to Selected Meshes")
             }
         }
     })
@@ -656,13 +704,16 @@ Coloris({
                 if (mesh !== null) {
                     if (mesh.isLight) {
                         mesh.color.set(new THREE.Color(color))
+                        Log_Info(`Color Changed to: ${color}`)
                     } else {
                         mesh.material.color.set(new THREE.Color(color))
+                        Log_Info(`Color Changed to: ${color}`)
                     }
                 }
             }
         }
     }
+
 })
 
 
@@ -722,12 +773,15 @@ radios.forEach((radio) => {
                         if (properties[property] === properties.toneMapping || properties[property] === properties.shadowTypes) {
                             if (properties[property] === properties.toneMapping) {
                                 renderer.toneMapping = properties[property][entry[1]];
+                                Log_Info(`set tone mapping to ${properties[property][entry[1]]}`)
                             } else {
                                 renderer.shadowMap = properties[property][entry[1]];
+                                Log_Info(`Set shadow map to ${properties[property][entry[1]]}`)
                             }
                         } else {
                             mesh.material[property] = properties[property][entry[1]];
                             mesh.material.needsUpdate = true;
+                            Log_Info(`set ${property} to ${properties[property][entry[1]]}`)
                         }
                     }
                 }
@@ -960,9 +1014,74 @@ function Slider_Meshes() {
 
 
 
+/**
+ * Export: Log function and Export Buttons.
+ */
 
 
+/// Log: Fill an article tag with paragraphs that start with >.
 
+const Information_Log = document.getElementById("information-log");
+
+function Log_Info(info, level) {
+    const Log_Line = document.createElement("p");
+    Log_Line.innerText = `> ${info}`;
+
+    if (level === 'warning') {
+        Log_Line.classList.add("panel-export_log-warning")
+    }
+
+    if (level === 'code') {
+        Log_Line.classList.add("panel-export_log-code")
+    }
+
+    Information_Log.appendChild(Log_Line)
+    Information_Log.scrollTo({ top: Information_Log.scrollHeight, behavior: 'smooth' })
+}
+
+
+const Export_Selected = document.getElementById("export-selected");
+const Export_Scene = document.getElementById("export-scene");
+
+function Exporting_Meshes(array) {
+    Iterate_Over(array, (index, mesh) => {
+        if (!mesh.isLight) {
+
+            const mesh_code = ` /// Mesh #${index}:
+            let geometry${index} = new THREE.${mesh.geometry.type}();
+            let material${index} = new THREE.${mesh.material.type}();
+            let mesh${index} = new THREE.Mesh(geometry${index}, material${index});
+            
+            mesh${index}.position.set(${mesh.position.x}, ${mesh.position.y}, ${mesh.position.z})
+            mesh${index}.scale.set(${mesh.scale.x}, ${mesh.scale.y}, ${mesh.scale.z})
+            mesh${index}.rotation.set(${mesh.rotation.x}, ${mesh.rotation.y}, ${mesh.rotation.z})
+            
+            scene.add(mesh${index});
+            
+            `
+            
+            Log_Info(`${mesh_code}`, 'code')
+            navigator.clipboard.writeText(mesh_code);
+            
+        } else {
+            
+            const mesh_code = `/// Light #${index}
+            let ${mesh.type + index} = new THREE.${mesh.type}();
+            ${mesh.type + index}.position.set(${mesh.position.x}, ${mesh.position.y}, ${mesh.position.z})
+            scene.add(${mesh.type + index})
+            
+            `
+            
+            Log_Info(`${mesh_code}`, 'code')
+            navigator.clipboard.writeText(mesh_code);
+        }
+    })
+    Log_Info("Code is copied to your clipboard !!!")
+}
+
+
+Export_Selected.addEventListener("click", () => Exporting_Meshes(Selected_Meshes))
+Export_Scene.addEventListener("click", () => Exporting_Meshes(scene_meshes))
 
 
 /**
@@ -1009,3 +1128,5 @@ const tick = () => {
 }
 
 tick();
+
+

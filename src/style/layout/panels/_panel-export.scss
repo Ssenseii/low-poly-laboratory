@@ -1,0 +1,74 @@
+.panel-export {
+
+    &_wrapper {
+        @include Inner-Wrapper;
+        height: 100%;
+
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        gap: var(--small);
+
+    }
+
+    &_log {
+
+        @include Scroll-noBar;
+        
+        width: 80%;
+        background-color: var(--primary);
+        border-radius: var(--small);
+
+        padding: var(--small);
+        
+        &-warning{
+            color: #e8c125 !important;
+        }
+
+        &-code{
+            color: var(--accent) !important;
+        }
+
+        p{
+            font-size: var(--medium);
+            color: var(--secondary);
+
+            span{
+                color: var(--accent);
+            }
+        }
+
+    }
+
+    &_actions {
+        display: flex;
+        flex-direction: column;
+        gap: var(--small);
+
+        button {
+            cursor: pointer;
+            @include button;
+
+            font-size: var(--large);
+            background-color: var(--selectable);
+            color: var(--secondary);
+
+            height: 50%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-weight: 700;
+
+            &:hover{
+                box-shadow: 0px 0px 1px 2px var(--primary);
+            }
+
+            &:active{
+                box-shadow: 0px 0px 1px 2px var(--primary) inset;
+            }
+        }
+
+    }
+}

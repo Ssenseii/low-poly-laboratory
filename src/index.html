@@ -412,7 +412,7 @@
                         </select>
 
                         <!-- Material Select -->
-                        <select name="Material" id="materials">
+                        <select name="Material" id="materials" >
                             <option value="1">Basic Material</option>
                             <option value="2">Standard Material</option>
                             <option value="3">Physical Material</option>
@@ -426,8 +426,8 @@
                     </div>
 
                     <!-- Generator Button  -->
-                    <div class="panel-geometry_generator-action" id="generator">
-                        <button>Create New Mesh</button>
+                    <div class="panel-geometry_generator-action">
+                        <button  id="generator">Create New Mesh</button>
                     </div>
                 </div>
 
@@ -518,7 +518,16 @@
 
             <!-- Export Area -->
             <div class="panel panel-export">
-
+                <div class="panel-export_wrapper">
+                    <article class="panel-export_log" id="information-log">
+                        <p>> Console Initiated...</p>
+                        <p>> Welcome, Start by <span>creating a new mesh</span>...</p>
+                    </article>
+                    <div class="panel-export_actions">
+                        <button id="export-selected" class="panel-export_actions">Export <br> Selected</button>
+                        <button id="export-scene" class="panel-export_actions">Export <br> Scene</button>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
@@ -535,7 +544,7 @@
     <!-- Loading Screen: When working, remove this and its js code -->
 
 
-    <div id="loading-screen" class="Loading">
+    <!-- <div id="loading-screen" class="Loading">
         <div class="Loading__Title">
             <h1>LOW <span>POLY</span> LABORATORY</h1>
             <p>version: alpha 0.1</p>
@@ -547,7 +556,7 @@
             <p>Loading: <span id="loading-item"></span></p>
             <div id="loader"></div>
         </div>
-    </div>
+    </div> -->
 
 
     <script type="module" src="./script.js"></script>
@@ -564,7 +573,7 @@
             panel.classList.toggle("hide");
         }
     </script>
-    <script type="module" src="./core/Loading.js"></script>
+    <!-- <script type="module" src="./core/Loading.js"></script> -->
     <script type="module" src="./core/Theme.js"></script>
 </body>
 

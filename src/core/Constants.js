@@ -21,7 +21,7 @@ export const canvas = document.querySelector('canvas.webgl')
 // scene
 
 export const scene = new THREE.Scene();
- 
+
 
 // Panel: Textures
 export const matcaps_panel = document.getElementById("matcaps-panel");
