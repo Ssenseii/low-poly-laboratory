@@ -2,7 +2,7 @@
 
 # LOW POLY LABORATORY
 
-A **threejs**-Powered **3d modeling** website written entirely in Vanilla JS.
+A **threejs**-Powered **3d modeling** website, written without frameworks.
 
 ## Acknowledgements
 
@@ -134,3 +134,7 @@ YES! Please do. I'd love any kind of feedback so I can turn this into an actual 
 ![Perry Platypus](https://i.ibb.co/FVtj1g8/perry-platipus.png")
 
 ![Glassified Donut](https://i.ibb.co/Qd4vp5V/Spacial-Donut.png")
+
+![Perfume Bottle](https://i.ibb.co/hR6RmjL/Screenshot-17.png")
+
+![Ocean Sky](https://i.ibb.co/zJ5zL5g/Screenshot-32.png")
